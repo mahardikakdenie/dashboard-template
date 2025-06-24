@@ -53,10 +53,12 @@
 						class="group flex items-center px-3 py-2 text-sm font-medium rounded-md cursor-pointer"
 						:class="{
 							'bg-indigo-50 text-indigo-600':
-								item.name === 'Beranda',
+								item.key === $route?.name,
 							'text-gray-600 hover:bg-gray-100':
-								item.name !== 'Beranda',
-						}">
+								item.key !== $route.name,
+						}"
+              @click="$router.push(item.to)"
+            >
 						<component :is="item.icon" />
 						<span class="ml-2">{{ item.name }}</span>
 					</div>
@@ -75,10 +77,10 @@ import IconOrder from './icons/order.vue';
 const showNav = ref<boolean>(false);
 
 const navItems = [
-	{ name: 'Beranda', icon: IconDashboard, to: '#' },
-	{ name: 'Pesanan', icon: IconOrder, to: '#' },
-	{ name: 'Produk', icon: IconProduct, to: '#' },
-	{ name: 'Laporan', icon: IconReport, to: '#' },
+	{ name: 'Beranda', key: 'index', icon: IconDashboard, to: '/' },
+	{ name: 'Pesanan', key: 'orders', icon: IconOrder, to: '/orders' },
+	{ name: 'Produk', key: 'products', icon: IconProduct, to: '/products' },
+	{ name: 'Laporan', key: 'reports', icon: IconReport, to: '/reports' },
 ];
 
 const isSidebarOpen = ref(false);
