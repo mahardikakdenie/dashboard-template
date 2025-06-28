@@ -7,13 +7,15 @@
                     <div
                         v-for="item in navItems"
                         :key="item.name"
-                        class="group flex items-center justify-center text-center p-3 text-sm font-medium rounded-md cursor-pointer transition-all duration-200"
+                        class="group flex flex-col items-center justify-center text-center p-3 text-sm font-medium rounded-md cursor-pointer transition-all duration-200"
                         :class="{
                             'bg-indigo-50 text-indigo-600': selectedBar.key === item.key,
                             'text-gray-600 hover:bg-gray-100': selectedBar.key !== item.key,
                         }"
+                        @mouseenter="onMouseHover"
                         @click="selectedBar = item">
-                        <component :is="item.icon" class="w-5 h-5" />
+                        <component :is="item.icon" class="w-5 h-4" />
+                        <span class="text-[8px]">{{ item.name }}</span>
                     </div>
                 </nav>
             </div>
@@ -75,6 +77,7 @@
 							'text-gray-600 hover:bg-gray-100':
 								item.url !== $route.fullPath,
 						}" @click="$router.push(item.url)">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-layout-dashboard w-4 h-4"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 3a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-6a2 2 0 0 1 2 -2zm0 12a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-2a2 2 0 0 1 2 -2zm10 -4a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-6a2 2 0 0 1 2 -2zm0 -8a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-2a2 2 0 0 1 2 -2z" /></svg>
 						<span class="ml-2 text-xs" :class="[
                             {'font-bold': item.url === $route?.fullPath}
                         ]">{{ item.name }}</span>
@@ -95,16 +98,18 @@ interface Menus {
     name: string;
     key: string;
     icon: any;
-    to: string;
     child: {
         name: string;
         url: string;
+        icon?: any;
     }[]
 }
 
+const isHoverMouse = ref<boolean>(false);
+
 const showNav = ref<boolean>(false);
 const navItems: Menus[] = [
-	{ name: 'Beranda', key: 'index', icon: IconDashboard, to: '/', child: [
+	{ name: 'Dashboard', key: 'index', icon: IconDashboard, child: [
         {
             name: 'Dashboard',
             url: '/',
@@ -115,24 +120,29 @@ const navItems: Menus[] = [
         },
         {
             name: 'Subcriptions',
-            url: '',
+            url: '/home/subcription',
         },
         {
             name: 'Packages',
-            url: ''
+            url: '/home/packages'
         },
         {
             name: 'Domain',
-            url: ''
+            url: '/home/domain'
         },
         {
             name: 'Purchase Transaction',
-            url: ''
+            url: '/home/purchase-transaction'
         }
     ] },
-	{ name: 'Pesanan', key: 'orders', icon: IconOrder, to: '/orders', child: [] },
-	{ name: 'Produk', key: 'products', icon: IconProduct, to: '/products', child: [] },
-	{ name: 'Laporan', key: 'reports', icon: IconReport, to: '/reports', child: [] },
+	{ name: 'Pesanan', key: 'orders', icon: IconOrder, child: [
+        {
+            name: "Order Monitoring",
+            url: '/order/monitoring',
+        }
+    ] },
+	{ name: 'Produk', key: 'products', icon: IconProduct, child: [] },
+	{ name: 'Laporan', key: 'reports', icon: IconReport, child: [] },
 ];
 
 const selectedBar = ref<Menus>(navItems[0]);
@@ -140,5 +150,9 @@ const isSidebarOpen = ref(false);
 
 const toggleSidebar = () => {
 	isSidebarOpen.value = !isSidebarOpen.value;
+};
+
+const onMouseHover = () => {
+    console.log("Mouse Hover");
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
     <div>
-        Companies
+        {{ $route.params.slug }}
     </div>
 </template>
