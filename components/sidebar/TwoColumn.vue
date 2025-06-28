@@ -162,7 +162,7 @@ const navItems: Menus[] = [
         ],
     },
     {
-        name: 'Pesanan',
+        name: 'Orders',
         key: 'orders',
         icon: markRaw(IconOrder),
         child: [
@@ -170,7 +170,7 @@ const navItems: Menus[] = [
         ],
     },
     {
-        name: 'Produk',
+        name: 'Products',
         key: 'products',
         icon: markRaw(IconProduct),
         child: [
@@ -178,7 +178,7 @@ const navItems: Menus[] = [
         ],
     },
     { 
-        name: 'Laporan', 
+        name: 'Reports', 
         key: 'reports', 
         icon: markRaw(IconReport), 
         child: [] 
