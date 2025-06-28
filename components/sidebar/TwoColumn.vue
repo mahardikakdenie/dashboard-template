@@ -66,9 +66,9 @@
 						</div>
 						<h3
 							class="text-sm font-semibold text-gray-800 text-center">
-							Adrian Herman
+							Mahardika Kessuma Denie
 						</h3>
-						<p class="text-xs text-gray-500 mt-1">Admin Analist</p>
+						<p class="text-xs text-gray-500 mt-1">Author Website</p>
 					</div>
 				</div>
 
@@ -120,6 +120,8 @@ import purchaseIcon from '../icons/purchase.vue';
 import truckIcon from '../icons/truck.vue';
 import shoppingIcon from '../icons/shopping.vue';
 import storeIcon from '../icons/store.vue';
+import uxCircleIcon from '../icons/ux-circle.vue';
+import UxCircle from '../icons/ux-circle.vue';
 
 interface Menus {
 	name: string;
@@ -179,6 +181,14 @@ const navItems: Menus[] = [
         icon: markRaw(theme), 
         child: [
             { name: 'Theme Monitoring', icon: markRaw(storeIcon), url: '/theme/monitoring' }
+        ] 
+    },
+    { 
+        name: 'UI Interface', 
+        key: 'ux-interface', 
+        icon: markRaw(uxCircleIcon), 
+        child: [
+            { name: 'Base UI', icon: markRaw(UxCircle), url: '/theme/monitoring' }
         ] 
     },
 ];
