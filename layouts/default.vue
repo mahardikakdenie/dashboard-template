@@ -5,7 +5,8 @@
       :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }"
       class="fixed inset-y-0 left-0 z-30 w-64 transition transform ease-in-out duration-200 bg-white lg:translate-x-0 lg:static lg:inset-auto"
     >
-      <Sidebar />
+      <!-- <Sidebar /> -->
+       <SidebarTwoColumn />
     </aside>
 
     <!-- Main Content Area -->
