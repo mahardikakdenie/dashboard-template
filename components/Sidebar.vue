@@ -43,7 +43,7 @@
 						<component :is="item.icon" />
 						<span class="ml-2">{{ item.name }}</span>
 					</div>
-				</nav>
+				</nav>	
 			</div>
 		</aside>
 	</div>
