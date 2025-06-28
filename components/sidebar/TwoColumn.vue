@@ -121,7 +121,7 @@ import truckIcon from '../icons/truck.vue';
 import shoppingIcon from '../icons/shopping.vue';
 import storeIcon from '../icons/store.vue';
 import uxCircleIcon from '../icons/ux-circle.vue';
-import UxCircle from '../icons/ux-circle.vue';
+import alertIcon from '../icons/alert.vue';
 
 interface Menus {
 	name: string;
@@ -188,7 +188,7 @@ const navItems: Menus[] = [
         key: 'ux-interface', 
         icon: markRaw(uxCircleIcon), 
         child: [
-            { name: 'Base UI', icon: markRaw(UxCircle), url: '/theme/monitoring' }
+            { name: 'Alert UI', icon: markRaw(alertIcon), url: '/user-interface/alert' },
         ] 
     },
 ];

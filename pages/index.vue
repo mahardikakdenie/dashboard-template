@@ -34,6 +34,11 @@
 			<table class="min-w-full divide-y divide-gray-200 rounded-xl shadow">
 				<thead class="bg-gray-50">
 					<tr>
+                        <th>
+                            <label class="flex justify-center items-center">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 cursor-pointer text-indigo-600 rounded" />
+                            </label>
+                        </th>
 						<th
                             v-for="thead in theadCompanies"
                             :key="thead.key"
@@ -45,6 +50,11 @@
 				</thead>
 				<tbody class="bg-white divide-y divide-gray-200">
 					<tr class="hover:bg-gray-50 transition-colors duration-150">
+                        <td>
+                            <label class="flex justify-center items-center">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 cursor-pointer text-indigo-600 rounded" />
+                            </label>
+                        </td>
 						<td
 							class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
 							Adrian Herman
@@ -63,6 +73,11 @@
 						</td>
 					</tr>
 					<tr class="hover:bg-gray-50 transition-colors duration-150">
+                        <td>
+                            <label class="flex justify-center items-center">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 cursor-pointer text-indigo-600 rounded" />
+                            </label>
+                        </td>
 						<td
 							class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
 							Budi Santoso
@@ -81,6 +96,11 @@
 						</td>
 					</tr>
 					<tr class="hover:bg-gray-50 transition-colors duration-150">
+                        <td class="">
+                            <label class="flex items-center justify-center">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 cursor-pointer text-indigo-600 rounded" />
+                            </label>
+                        </td>
 						<td
 							class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
 							Siti Rahayu
