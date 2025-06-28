@@ -6,7 +6,9 @@
 			</div>
 
 			<div>
-				<InputFeature type="date" />
+				<button class="border border-gray-300 rounded-md text-sm px-6 cursor-pointer py-1">
+                    Filter Date
+                </button>
 			</div>
 		</div>
 
