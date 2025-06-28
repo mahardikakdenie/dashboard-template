@@ -91,17 +91,7 @@
 								item.url !== $route.fullPath,
 						}"
 						@click="$router.push(item.url)">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-							class="icon icon-tabler icons-tabler-filled icon-tabler-layout-dashboard w-4 h-4">
-							<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-							<path
-								d="M9 3a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-6a2 2 0 0 1 2 -2zm0 12a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-2a2 2 0 0 1 2 -2zm10 -4a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-6a2 2 0 0 1 2 -2zm0 -8a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-2a2 2 0 0 1 2 -2z" />
-						</svg>
+						<component v-if="item.icon" :is="item.icon" class="w-4 h-4" />
 						<span
 							class="ml-2 text-xs"
 							:class="[
@@ -119,8 +109,17 @@
 <script setup lang="ts">
 import IconReport from '../icons/report.vue';
 import IconDashboard from '../icons/dashboard.vue';
+import iconHome from '../icons/home.vue';
 import IconProduct from '../icons/product.vue';
 import IconOrder from '../icons/order.vue';
+import theme from '../icons/theme.vue';
+import starIcon from '../icons/star.vue';
+import packagesIcon from '../icons/packages.vue';
+import domainIcon from '../icons/domain.vue';
+import purchaseIcon from '../icons/purchase.vue';
+import truckIcon from '../icons/truck.vue';
+import shoppingIcon from '../icons/shopping.vue';
+import storeIcon from '../icons/store.vue';
 
 interface Menus {
 	name: string;
@@ -138,69 +137,51 @@ const isHoverMouse = ref<boolean>(false);
 
 const showNav = ref<boolean>(false);
 const navItems: Menus[] = [
-	{
-		name: 'Dashboard',
-		key: 'index',
-		icon: IconDashboard,
+    {
+        name: 'Dashboard',
+        key: 'index',
+        icon: markRaw(iconHome),
         roles: ['admin', 'superadmin'],
-		child: [
-			{
-				name: 'Dashboard',
-				url: '/',
-			},
-			{
-				name: 'Companies',
-				url: '/home/companies',
-			},
-			{
-				name: 'Subcriptions',
-				url: '/home/subcription',
-			},
-			{
-				name: 'Packages',
-				url: '/home/packages',
-			},
-			{
-				name: 'Domain',
-				url: '/home/domain',
-			},
-			{
-				name: 'Purchase Transaction',
-				url: '/home/purchase-transaction',
-			},
-		],
-	},
-	{
-		name: 'Pesanan',
-		key: 'orders',
-		icon: IconOrder,
-		child: [
-			{
-				name: 'Order Monitoring',
-				url: '/order/monitoring',
-			},
-		],
-	},
-	{
-		name: 'Produk',
-		key: 'products',
-		icon: IconProduct,
-		child: [
-			{
-				name: 'List Products',
-				url: '/products/list',
-			},
-		],
-	},
-	{ name: 'Laporan', key: 'reports', icon: IconReport, child: [] },
-	{ name: 'Theme', key: 'theme', icon: IconReport, child: [
-        {
-            name: 'Theme Monitoring',
-            url: '/theme/monitoring'
-        }
-    ] },
+        child: [
+            { name: 'Dashboard', icon: markRaw(IconDashboard), url: '/' },
+            { name: 'Companies', icon: markRaw(theme), url: '/home/companies' },
+            { name: 'Subcriptions', icon: markRaw(starIcon), url: '/home/subcription' },
+            { name: 'Packages', icon: markRaw(packagesIcon), url: '/home/packages' },
+            { name: 'Domain', icon: markRaw(domainIcon), url: '/home/domain' },
+            { name: 'Purchase Transaction', icon: markRaw(purchaseIcon), url: '/home/purchase-transaction' },
+        ],
+    },
+    {
+        name: 'Pesanan',
+        key: 'orders',
+        icon: markRaw(IconOrder),
+        child: [
+            { name: 'Order Monitoring', icon: markRaw(truckIcon), url: '/order/monitoring' }
+        ],
+    },
+    {
+        name: 'Produk',
+        key: 'products',
+        icon: markRaw(IconProduct),
+        child: [
+            { name: 'List Products', icon: markRaw(shoppingIcon), url: '/products/list' }
+        ],
+    },
+    { 
+        name: 'Laporan', 
+        key: 'reports', 
+        icon: markRaw(IconReport), 
+        child: [] 
+    },
+    { 
+        name: 'Theme', 
+        key: 'theme', 
+        icon: markRaw(theme), 
+        child: [
+            { name: 'Theme Monitoring', icon: markRaw(storeIcon), url: '/theme/monitoring' }
+        ] 
+    },
 ];
-
 const selectedBar = ref<Menus>(navItems[0]);
 const isSidebarOpen = ref(false);
 
