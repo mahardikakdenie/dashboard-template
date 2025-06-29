@@ -19,6 +19,10 @@
 				</div>
 			</div>
 		</div>
+
+        <div class="mt-4 shadow bg-white p-4 rounded-md">
+            <UiTable />
+        </div>
     </div>
 </template>
 

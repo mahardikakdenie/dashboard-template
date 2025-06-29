@@ -130,6 +130,7 @@ import shoppingIcon from '../icons/shopping.vue';
 import storeIcon from '../icons/store.vue';
 import uxCircleIcon from '../icons/ux-circle.vue';
 import alertIcon from '../icons/alert.vue';
+import { markRaw, ref } from 'vue';
 
 interface Menus {
 	name: string;
