@@ -4,7 +4,7 @@
             <!-- Sidebar Navigation -->
             <div class="border-r border-gray-200 px-1 py-2">
                 <nav class="space-y-1">
-                    <TransitionGroup name="slide-fade" mode="out-in">
+                    <TransitionGroup name="slide-fade">
                         <div
                             v-for="item in navItems"
                             :key="item.name"
