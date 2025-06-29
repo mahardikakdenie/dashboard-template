@@ -213,7 +213,7 @@ const onMouseHover = () => {
 };
 </script>
 
-<style scoped>
+<style>
 /* Fade */
 .fade-enter-active,
 .fade-leave-active {

@@ -2,7 +2,7 @@
 	<div>
 		<div>
 			<span class="font-bold text-slate-500 capitalize"
-				>{{ $route?.params?.slug }} Data</span
+				>{{ formattedCapitalize($route?.params?.slug) }} Data</span
 			>
 		</div>
 		<div class="flex justify-between my-4">
