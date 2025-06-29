@@ -6,7 +6,7 @@
 			</div>
 
 			<div>
-				<button class="border border-gray-300 rounded-md text-sm px-6 cursor-pointer py-1">
+				<button class="px-5 py-2 bg-white text-sm font-medium text-gray-700 border cursor-pointer border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200">
                     Filter Date
                 </button>
 			</div>
