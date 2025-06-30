@@ -66,7 +66,7 @@ const title = computed((): string => {
 	if (typeof route?.params?.slug === 'object') {
 		return route?.params?.slug[0].split('-').join(' ');
 	} else {
-		return route?.params?.slug.replace('-', ' ');
+    return route?.params?.slug?.replace('-', ' ');
 	}
 
 	return '';

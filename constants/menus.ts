@@ -78,7 +78,7 @@ export const MenuSidebar = [
 			{
 				name: 'Order Monitoring',
 				icon: markRaw(truckIcon),
-				url: '/order/monitoring',
+				url: '/order/order-monitong-monitoring',
 			},
 		],
 	},
@@ -90,7 +90,7 @@ export const MenuSidebar = [
 			{
 				name: 'List Products',
 				icon: markRaw(shoppingIcon),
-				url: '/products/list',
+				url: '/products/product-list',
 			},
 		],
 	},
@@ -108,7 +108,7 @@ export const MenuSidebar = [
 			{
 				name: 'Theme Monitoring',
 				icon: markRaw(storeIcon),
-				url: '/theme/monitoring',
+				url: '/theme/theme-monitoring',
 			},
 		],
 	},
