@@ -34,17 +34,20 @@
 
 			<transition name="fade" mode="out-in">
 				<tbody>
-					<tr v-for="(data, index) in datas" :key="index">
+					<tr v-for="(data, index) in paginatedData" :key="index">
 						<td>
 							<BaseCheckbox />
 						</td>
-						<td v-for="(i, key) in data" :key="key" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+						<td
+							v-for="(i, key) in data"
+							:key="key"
+							class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
 							<span>
 								{{ data[key] }}
 							</span>
 						</td>
 					</tr>
-					<tr v-if="!datas || (datas && datas.length === 0)">
+					<tr v-if="!paginatedData || (paginatedData && paginatedData.length === 0)">
 						<td colspan="6" class="py-10 text-center space-y-3">
 							<div class="flex justify-center">
 								<svg
@@ -72,6 +75,41 @@
 				</tbody>
 			</transition>
 		</table>
+
+		<!-- Pagination -->
+		<div class="flex items-center justify-end gap-4 mt-6">
+			<!-- Tombol Previous -->
+			<button
+				@click="prevPage"
+				:disabled="currentPage === 1"
+				class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition">
+				Previous
+			</button>
+
+			<!-- List Halaman -->
+			<div class="flex space-x-1">
+				<button
+					v-for="page in pages"
+					:key="page"
+					@click="goToPage(page)"
+					:class="[
+						'px-3 py-1 rounded-md text-sm font-medium transition',
+						currentPage === page
+							? 'bg-blue-600 text-white'
+							: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+					]">
+					{{ page }}
+				</button>
+			</div>
+
+			<!-- Tombol Next -->
+			<button
+				@click="nextPage"
+				:disabled="currentPage === totalPages"
+				class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition">
+				Next
+			</button>
+		</div>
 	</div>
 </template>
 
@@ -81,10 +119,13 @@ interface Header {
 	key: string;
 }
 
-const props = withDefaults(defineProps<{
-	headers?: Header[],
-	datas?: any[],
-}>(), {});
+const props = withDefaults(
+	defineProps<{
+		headers?: Header[];
+		datas?: any[];
+	}>(),
+	{}
+);
 
 const theadCompanies = ref<
 	{
@@ -108,14 +149,62 @@ const theadCompanies = ref<
 		name: 'Status',
 		key: 'status',
 	},
+	{
+		name: 'Actions',
+		key: 'actions',
+	}
 ]);
 
-// const datas = ref<any>([
-// 	{
-// 		name: 'PT Friendsure Indonesia',
-// 		email: 'office@teman.id',
-// 		url: 'https://github.com/mahardikakdenie',
-// 		status: 'Active',
-// 	}
-// ]);
+const currentPage = ref(1);
+const itemsPerPage = 5;
+
+// Hitung data untuk halaman saat ini
+const paginatedData = computed(() => {
+	const start = (currentPage.value - 1) * itemsPerPage;
+	const end = start + itemsPerPage;
+	return props?.datas?.slice(start, end);
+});
+
+// Tampilkan maksimal 5 tombol halaman
+const pages = computed(() => {
+	const total = totalPages.value;
+	const current = currentPage.value;
+	const range = [];
+
+	if (total <= 5) {
+		for (let i = 1; i <= total; i++) range.push(i);
+	} else {
+		if (current <= 3) {
+			for (let i = 1; i <= 5; i++) range.push(i);
+			range.push('...');
+		} else if (current >= total - 2) {
+			range.push('...');
+			for (let i = total - 4; i <= total; i++) range.push(i);
+		} else {
+			range.push('...');
+			for (let i = current - 1; i <= current + 1; i++) range.push(i);
+			range.push('...');
+		}
+	}
+
+	return range;
+});
+
+function goToPage(page: any) {
+	if (typeof page === 'number') currentPage.value = page;
+}
+
+// Total halaman
+const totalPages = computed(() =>
+	Math.ceil((props?.datas?.length || 0) / itemsPerPage)
+);
+
+// Fungsi navigasi
+function prevPage() {
+	if (currentPage.value > 1) currentPage.value--;
+}
+
+function nextPage() {
+	if (currentPage.value < totalPages.value) currentPage.value++;
+}
 </script>

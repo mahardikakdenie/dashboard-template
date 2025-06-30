@@ -21,7 +21,7 @@
 		</div>
 
         <div class="mt-4 shadow bg-white p-4 rounded-md">
-            <UiTable />
+            <UiTable :datas="datas" />
         </div>
     </div>
 </template>
@@ -43,6 +43,52 @@ const title = computed((): string => {
 
     return '';
 });
+
+
+const datas = ref<any>([
+	{
+		name: 'PT Friendsure Indonesia',
+		email: 'office@teman.id',
+		url: 'https://github.com/mahardikakdenie',
+		status: 'Active',
+	},
+	{
+		name: 'PT Friendsure Indonesia',
+		email: 'office@teman.id',
+		url: 'https://github.com/mahardikakdenie',
+		status: 'Active',
+	},
+	{
+		name: 'PT Friendsure Indonesia',
+		email: 'office@teman.id',
+		url: 'https://github.com/mahardikakdenie',
+		status: 'Active',
+	},
+	{
+		name: 'PT Friendsure Indonesia',
+		email: 'office@teman.id',
+		url: 'https://github.com/mahardikakdenie',
+		status: 'Active',
+	},
+	{
+		name: 'PT Friendsure Indonesia',
+		email: 'office@teman.id',
+		url: 'https://github.com/mahardikakdenie',
+		status: 'Active',
+	},
+	{
+		name: 'PT Friendsure Indonesia',
+		email: 'office@teman.id',
+		url: 'https://github.com/mahardikakdenie',
+		status: 'Active',
+	},
+	{
+		name: 'PT Friendsure Indonesia',
+		email: 'office@teman.id',
+		url: 'https://github.com/mahardikakdenie',
+		status: 'Active',
+	},
+]);
 
 const summaries = ref<Summary[]>([
 	{
