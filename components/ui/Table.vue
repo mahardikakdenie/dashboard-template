@@ -12,7 +12,7 @@
 			<div>
 				<button
 					class="border border-green-300 bg-green-400 px-4 rounded text-gray-100 py-1 text-sm hover:bg-green-500 cursor-pointer font-semibold">
-					Lihat Semua Data
+					Create Data
 				</button>
 			</div>
 		</div>
@@ -34,7 +34,17 @@
 
 			<transition name="fade" mode="out-in">
 				<tbody>
-					<tr>
+					<tr v-for="(data, index) in datas" :key="index">
+						<td>
+							<BaseCheckbox />
+						</td>
+						<td v-for="(i, key) in data" :key="key" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+							<span>
+								{{ data[key] }}
+							</span>
+						</td>
+					</tr>
+					<tr v-if="!datas || (datas && datas.length === 0)">
 						<td colspan="6" class="py-10 text-center space-y-3">
 							<div class="flex justify-center">
 								<svg
@@ -66,6 +76,16 @@
 </template>
 
 <script lang="ts" setup>
+interface Header {
+	name: string;
+	key: string;
+}
+
+const props = withDefaults(defineProps<{
+	headers?: Header[],
+	datas?: any[],
+}>(), {});
+
 const theadCompanies = ref<
 	{
 		name: string;
@@ -85,12 +105,17 @@ const theadCompanies = ref<
 		key: 'url',
 	},
 	{
-		name: 'PLAN',
-		key: 'plan',
-	},
-	{
 		name: 'Status',
 		key: 'status',
 	},
 ]);
+
+// const datas = ref<any>([
+// 	{
+// 		name: 'PT Friendsure Indonesia',
+// 		email: 'office@teman.id',
+// 		url: 'https://github.com/mahardikakdenie',
+// 		status: 'Active',
+// 	}
+// ]);
 </script>
