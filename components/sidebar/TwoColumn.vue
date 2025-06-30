@@ -221,9 +221,6 @@ const isOpen = (name: any) => {
 	return openMenus.value[name] || false;
 };
 
-const isHoverMouse = ref<boolean>(false);
-
-const showNav = ref<boolean>(false);
 const navItems = ref<Menus[]>(MenuSidebar);
 const selectedBar = ref<Menus>(navItems.value[0]);
 const isSidebarOpen = ref(false);
