@@ -9,13 +9,13 @@
 			<div>
 				<InputFeature placeholder="Search" />
 			</div>
-			<div class="gap-3 flex">
+			<div class="">
 				<button
-					class="border border-green-300 bg-green-400 px-4 rounded text-gray-100 py-1 text-sm hover:bg-green-500 cursor-pointer font-semibold">
+					class="border border-green-300 bg-green-400 px-4 rounded text-gray-100 py-2 text-sm hover:bg-green-500 cursor-pointer font-semibold">
 					Create Data
 				</button>
 				<button
-					class="border border-green-300 bg-green-400 px-4 rounded text-gray-100 py-1 text-sm hover:bg-green-500 cursor-pointer font-semibold">
+					class="border border-green-300 bg-green-400 px-6 rounded text-gray-100 py-2 ml-2 text-sm hover:bg-green-500 cursor-pointer font-semibold">
 					Filter
 				</button>
 			</div>
