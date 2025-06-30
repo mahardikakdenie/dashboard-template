@@ -15,7 +15,7 @@
 					Create Data
 				</button>
 				<button
-					class="border border-green-300 bg-green-400 px-6 rounded text-gray-100 py-2 ml-2 text-sm hover:bg-green-500 cursor-pointer font-semibold">
+					class="border border-green-300 bg-green-400 px-6 rounded text-gray-100 py-2 text-sm hover:bg-green-500 cursor-pointer font-semibold">
 					Filter
 				</button>
 			</div>
@@ -91,7 +91,7 @@
 			</button>
 
 			<!-- List Halaman -->
-			<div class="flex space-x-1">
+			<div v-if="pages.length > 0" class="flex space-x-1">
 				<button
 					v-for="page in pages"
 					:key="page"
@@ -102,8 +102,14 @@
 							? 'bg-blue-600 text-white'
 							: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
 					]">
-					{{ page }}
+					{{ page || 0 }}
 				</button>
+			</div>
+
+			<div v-else>
+				<span class="px-3 py-1 rounded-md text-sm font-medium transition">
+					0
+				</span>
 			</div>
 
 			<!-- Tombol Next -->
