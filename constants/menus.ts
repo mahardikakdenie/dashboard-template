@@ -46,8 +46,8 @@ export const MenuSidebar = [
 				url: '',
 				icon: markRaw(packagesIcon),
 				children: [
-					{ name: 'Reports', url: '/dashboard/reports' },
-					{ name: 'Analytics', url: '/dashboard/analytics' },
+					{ name: 'Reports', url: '/home/reports', isOpen: false, },
+					{ name: 'Analytics', url: '/home/analytics', isOpen: false, },
 				],
 			},
 		],

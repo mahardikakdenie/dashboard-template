@@ -143,13 +143,12 @@
 									<IconsChevron
 										:class="{
 											'transform rotate-270': !isOpen(
-												childItem.name
+                                            childItem.name
 											),
 											'transform rotate-0': isOpen(
 												childItem.name
 											),
-										}" 
-                                    />
+										}" />
 								</div>
 
 								<!-- Submenu -->
@@ -168,7 +167,7 @@
 											}"
 											@click="$router.push(subItem.url)">
 											<span class="ml-2 text-xs">{{
-												childItem.name
+												subItem.name
 											}}</span>
 										</div>
 									</div>
@@ -197,6 +196,7 @@ export interface Menus {
 		children?: {
 			name: string;
 			url: string;
+            isOpen?: boolean,
 		}[];
 	}[];
 }
@@ -222,6 +222,45 @@ const isSidebarOpen = ref(false);
 const toggleSidebar = () => {
 	isSidebarOpen.value = !isSidebarOpen.value;
 };
+
+const route = useRoute();
+
+// Auto-buka dropdown jika salah satu children aktif
+const autoOpenDropdowns = () => {
+    const openState = {} as Record<string, boolean>;
+    selectedBar.value.child?.forEach((item) => {
+        if (
+            item.children &&
+            item.children.some((child) => child.url === route.fullPath)
+        ) {
+            openState[item.name] = true;
+        }
+    });
+    return openState;
+};
+
+onMounted(() => {
+    const data = navItems?.value?.filter((nav) =>
+        nav?.child.some(
+            (c) =>
+                c.url === route?.fullPath ||
+                c.children?.some((child) => child?.url === route?.fullPath)
+        )
+    );
+
+    if (data.length > 0) {
+        selectedBar.value = data[0];
+    }
+
+    // Set openMenus berdasarkan route aktif
+    openMenus.value = autoOpenDropdowns();
+});
+
+// Responsif saat route berubah
+watchEffect(() => {
+    openMenus.value = autoOpenDropdowns();
+});
+
 </script>
 
 <style>
