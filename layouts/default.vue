@@ -36,6 +36,8 @@
 				</div>
 				<nuxt-page />
 			</main>
+
+      <Footer />
 		</div>
 	</div>
 </template>
