@@ -1,8 +1,8 @@
 <template>
 	<aside class="h-full bg-white shadow-md">
 		<div class="grid grid-cols-4 h-full">
-			<!-- Sidebar Navigation -->
-			<div class="border-r border-gray-200 px-1 py-2">
+			<!-- Sidebar Navigation - border-r border-gray-200  -->
+			<div class="px-1 py-2 shadow">
 				<nav class="space-y-1">
 					<TransitionGroup name="slide-fade">
 						<div
@@ -27,12 +27,12 @@
 			<div class="col-span-3 bg-gray-50">
 				<!-- Top Header -->
 				<div
-					class="px-6 py-5 border-b border-gray-200 flex items-center justify-between bg-white">
+					class="px-6 py-5 border-gray-200 flex items-center justify-between bg-white">
 					<!-- Logo -->
 					<div class="flex items-center space-x-2">
 						<img
 							src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/logo.svg "
-							width="130"
+							width="120"
 							alt="Logo"
 							class="object-contain" />
 					</div>

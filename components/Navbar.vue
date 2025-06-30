@@ -1,7 +1,7 @@
 <template>
 	<nav class="bg-gray-50 dark:bg-gray-900">
 		<div
-			class="flex flex-wrap items-center justify-between mx-auto px-4 py-6">
+			class="flex flex-wrap items-center justify-between mx-auto px-4 py-5">
 			<InputFeature placeholder="Search" />
 			<div
 				class="flex items-center md:order-2 space-x-1 md:space-x-0 rtl:space-x-reverse">
