@@ -188,24 +188,8 @@
 	</aside>
 </template>
 <script setup lang="ts">
-import IconReport from '../icons/report.vue';
-import IconDashboard from '../icons/dashboard.vue';
-import iconHome from '../icons/home.vue';
-import IconProduct from '../icons/product.vue';
-import IconOrder from '../icons/order.vue';
-import theme from '../icons/theme.vue';
-import starIcon from '../icons/star.vue';
-import packagesIcon from '../icons/packages.vue';
-import domainIcon from '../icons/domain.vue';
-import purchaseIcon from '../icons/purchase.vue';
-import truckIcon from '../icons/truck.vue';
-import shoppingIcon from '../icons/shopping.vue';
-import storeIcon from '../icons/store.vue';
-import uxCircleIcon from '../icons/ux-circle.vue';
-import alertIcon from '../icons/alert.vue';
-import usersIcon from '../icons/users.vue';
-import lockIcon from '../icons/lock.vue';
 import { markRaw, ref } from 'vue';
+import { MenuSidebar } from '~/constants/menus';
 
 interface Menus {
 	name: string;
@@ -240,116 +224,8 @@ const isOpen = (name: any) => {
 const isHoverMouse = ref<boolean>(false);
 
 const showNav = ref<boolean>(false);
-const navItems: Menus[] = [
-	{
-		name: 'Dashboard',
-		key: 'index',
-		icon: markRaw(iconHome),
-		roles: ['admin', 'superadmin'],
-		child: [
-			{ name: 'Dashboard', icon: markRaw(IconDashboard), url: '/' },
-			{ name: 'Companies', icon: markRaw(theme), url: '/home/companies' },
-			{
-				name: 'Subcriptions',
-				icon: markRaw(starIcon),
-				url: '/home/subcription',
-			},
-			{
-				name: 'Packages',
-				icon: markRaw(packagesIcon),
-				url: '/home/packages',
-			},
-			{ name: 'Domain', icon: markRaw(domainIcon), url: '/home/domain' },
-			{
-				name: 'Purchase Transaction',
-				icon: markRaw(purchaseIcon),
-				url: '/home/purchase-transaction',
-			},
-			{
-				name: 'Overview',
-				url: '',
-				icon: markRaw(packagesIcon),
-				children: [
-					{ name: 'Reports', url: '/dashboard/reports' },
-					{ name: 'Analytics', url: '/dashboard/analytics' },
-				],
-			},
-		],
-	},
-    {
-        name: 'Users',
-        key: 'users',
-        icon: markRaw(usersIcon),
-        roles: [],
-        child: [
-            {
-                name: 'Users List',
-                icon: markRaw(usersIcon),
-                url: '/users',
-            },
-            {
-                name: 'Roles',
-                icon: markRaw(lockIcon),
-                url: 'users/roles',
-            }
-        ],
-    },
-	{
-		name: 'Orders',
-		key: 'orders',
-		icon: markRaw(IconOrder),
-		child: [
-			{
-				name: 'Order Monitoring',
-				icon: markRaw(truckIcon),
-				url: '/order/monitoring',
-			},
-		],
-	},
-	{
-		name: 'Products',
-		key: 'products',
-		icon: markRaw(IconProduct),
-		child: [
-			{
-				name: 'List Products',
-				icon: markRaw(shoppingIcon),
-				url: '/products/list',
-			},
-		],
-	},
-	{
-		name: 'Reports',
-		key: 'reports',
-		icon: markRaw(IconReport),
-		child: [],
-	},
-	{
-		name: 'Theme',
-		key: 'theme',
-		icon: markRaw(theme),
-		child: [
-			{
-				name: 'Theme Monitoring',
-				icon: markRaw(storeIcon),
-				url: '/theme/monitoring',
-			},
-		],
-	},
-	{
-		name: 'UI Interface',
-		key: 'ux-interface',
-		icon: markRaw(uxCircleIcon),
-		child: [
-			{
-				name: 'Alert UI',
-				icon: markRaw(alertIcon),
-				url: '/user-interface/alert',
-			},
-		],
-	},
-];
-const selectedBar = ref<Menus>(navItems[0]);
+const navItems = ref<Menus[]>(MenuSidebar);
+const selectedBar = ref<Menus>(navItems.value[0]);
 const isSidebarOpen = ref(false);
 
 const toggleSidebar = () => {
