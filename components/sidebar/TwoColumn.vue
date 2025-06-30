@@ -203,6 +203,8 @@ import shoppingIcon from '../icons/shopping.vue';
 import storeIcon from '../icons/store.vue';
 import uxCircleIcon from '../icons/ux-circle.vue';
 import alertIcon from '../icons/alert.vue';
+import usersIcon from '../icons/users.vue';
+import lockIcon from '../icons/lock.vue';
 import { markRaw, ref } from 'vue';
 
 interface Menus {
@@ -274,6 +276,24 @@ const navItems: Menus[] = [
 			},
 		],
 	},
+    {
+        name: 'Users',
+        key: 'users',
+        icon: markRaw(usersIcon),
+        roles: [],
+        child: [
+            {
+                name: 'Users List',
+                icon: markRaw(usersIcon),
+                url: '/users',
+            },
+            {
+                name: 'Roles',
+                icon: markRaw(lockIcon),
+                url: 'users/roles',
+            }
+        ],
+    },
 	{
 		name: 'Orders',
 		key: 'orders',
