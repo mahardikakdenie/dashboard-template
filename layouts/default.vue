@@ -1,27 +1,43 @@
 <template>
-  <div class="flex h-screen bg-gray-100">
-    <!-- Sidebar -->
-    <aside
-      :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }"
-      class="fixed inset-y-0 left-0 z-30 w-64 transition transform ease-in-out duration-200 bg-white lg:translate-x-0 lg:static lg:inset-auto"
-    >
-      <!-- <Sidebar /> -->
-       <SidebarTwoColumn />
-    </aside>
+	<div class="flex h-screen bg-gray-100">
+		<!-- Sidebar -->
+		<aside
+			:class="{
+				'translate-x-0': isSidebarOpen,
+				'-translate-x-full': !isSidebarOpen,
+			}"
+			class="fixed inset-y-0 left-0 z-30 w-64 transition transform ease-in-out duration-200 bg-white lg:translate-x-0 lg:static lg:inset-auto">
+			<!-- <Sidebar /> -->
+			<SidebarTwoColumn />
+		</aside>
 
-    <!-- Main Content Area -->
-    <div class="flex flex-col flex-1 overflow-hidden">
-      <!-- Navbar -->
-      <header class="bg-white z-20">
-        <Navbar @toggle-sidebar="toggleSidebar" />
-      </header>
+		<!-- Main Content Area -->
+		<div class="flex flex-col flex-1 overflow-hidden">
+			<!-- Navbar -->
+			<header class="bg-white z-20">
+				<Navbar @toggle-sidebar="toggleSidebar" />
+			</header>
 
-      <!-- Page Content -->
-      <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
-        <nuxt-page />
-      </main>
-    </div>
-  </div>
+			<!-- Page Content -->
+			<main class="flex-1 overflow-y-auto bg-gray-100 p-6">
+				<div v-if="$route?.fullPath !=='/'" class="flex justify-between gap-4">
+					<div class="flex items-center">
+						<h4 class="font-bold text-xl capitalize">
+							{{ title }}
+						</h4>
+					</div>
+
+					<div>
+						<button
+							class="px-5 py-2 bg-white text-sm font-medium text-gray-700 border cursor-pointer border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200">
+							Filter Date
+						</button>
+					</div>
+				</div>
+				<nuxt-page />
+			</main>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -39,9 +55,20 @@ useSeoMeta({
 	ogDescription: META_DESCRIPTION,
 });
 
-const isSidebarOpen = ref(false)
+const route = useRoute();
+
+const isSidebarOpen = ref(false);
 
 const toggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value
-}
+	isSidebarOpen.value = !isSidebarOpen.value;
+};
+const title = computed((): string => {
+	if (typeof route?.params?.slug === 'object') {
+		return route?.params?.slug[0].split('-').join(' ');
+	} else {
+		return route?.params?.slug.replace('-', ' ');
+	}
+
+	return '';
+});
 </script>
