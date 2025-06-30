@@ -61,7 +61,7 @@ export const MenuSidebar = [
             {
                 name: 'Users List',
                 icon: markRaw(usersIcon),
-                url: '/users/lists',
+                url: '/users/user-lists',
             },
             {
                 name: 'Roles',
