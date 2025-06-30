@@ -90,7 +90,9 @@
 
 					<TransitionGroup name="list" tag="div" class="space-y-1">
 						<div
-							v-for="item in selectedBar.child?.filter(child => child?.url !== '') || []"
+							v-for="item in selectedBar.child?.filter(
+								(child) => child?.url !== ''
+							) || []"
 							:key="item.name"
 							class="group flex items-center px-3 py-2 text-sm font-medium rounded-md cursor-pointer"
 							:class="{
@@ -101,18 +103,19 @@
 							}"
 							@click="$router.push(item.url)">
 							<div v-if="item.url" class="flex">
-                                <component
-								v-if="item.icon"
-								:is="item.icon"
-								class="w-4 h-4" />
-                                <span
-                                    class="ml-2 text-xs"
-                                    :class="{
-                                        'font-bold': item.url === $route.fullPath,
-                                    }"
-                                    >{{ item.name }}</span
-                                >
-                            </div>
+								<component
+									v-if="item.icon"
+									:is="item.icon"
+									class="w-4 h-4" />
+								<span
+									class="ml-2 text-xs"
+									:class="{
+										'font-bold':
+											item.url === $route.fullPath,
+									}"
+									>{{ item.name }}</span
+								>
+							</div>
 						</div>
 
 						<!-- Nested Children with Toggle -->
@@ -132,12 +135,12 @@
 											v-if="childItem.icon"
 											:is="childItem.icon"
 											class="w-4 h-4" />
-										<span class="ml-2 text-xs text-slate-500">{{
-											childItem.name
-										}}</span>
+										<span
+											class="ml-2 text-xs text-slate-500"
+											>{{ childItem.name }}</span
+										>
 									</div>
-									<svg
-										class="w-4 h-4 transition-transform duration-200 text-gray-500"
+									<IconsChevron
 										:class="{
 											'transform rotate-270': !isOpen(
 												childItem.name
@@ -145,17 +148,8 @@
 											'transform rotate-0': isOpen(
 												childItem.name
 											),
-										}"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
-										xmlns="http://www.w3.org/2000/svg">
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M19 9l-7 7-7-7"></path>
-									</svg>
+										}" 
+                                    />
 								</div>
 
 								<!-- Submenu -->
@@ -174,8 +168,8 @@
 											}"
 											@click="$router.push(subItem.url)">
 											<span class="ml-2 text-xs">{{
-                                                childItem.name
-                                            }}</span>
+												childItem.name
+											}}</span>
 										</div>
 									</div>
 								</Transition>
@@ -191,7 +185,7 @@
 import { markRaw, ref } from 'vue';
 import { MenuSidebar } from '~/constants/menus';
 
-interface Menus {
+export interface Menus {
 	name: string;
 	key: string;
 	icon: any;
@@ -228,7 +222,6 @@ const isSidebarOpen = ref(false);
 const toggleSidebar = () => {
 	isSidebarOpen.value = !isSidebarOpen.value;
 };
-
 </script>
 
 <style>
@@ -275,14 +268,14 @@ const toggleSidebar = () => {
 
 .slide-enter-active,
 .slide-leave-active {
-  transition: all 0.2s ease-in-out;
-  max-height: 200px;
-  overflow: hidden;
+	transition: all 0.2s ease-in-out;
+	max-height: 200px;
+	overflow: hidden;
 }
 
 .slide-enter-from,
 .slide-leave-to {
-  opacity: 0;
-  max-height: 0;
+	opacity: 0;
+	max-height: 0;
 }
 </style>
