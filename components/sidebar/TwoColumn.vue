@@ -229,9 +229,6 @@ const toggleSidebar = () => {
 	isSidebarOpen.value = !isSidebarOpen.value;
 };
 
-const onMouseHover = () => {
-	console.log('Mouse Hover');
-};
 </script>
 
 <style>
