@@ -57,24 +57,22 @@
 
 				<!-- Profile Card -->
 				<div class="px-4 mt-4">
-					<Transition name="fade" appear>
-						<div
-							class="px-4 py-2 border border-gray-200 rounded-lg bg-white shadow-sm flex flex-col items-center">
-							<div class="mb-3">
-								<img
-									src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/customer/customer15.jpg "
-									alt="User Avatar"
-									class="w-16 h-16 object-cover rounded-full border-2 border-indigo-100 shadow-sm" />
-							</div>
-							<h3
-								class="text-sm font-semibold text-gray-800 text-center">
-								Mahardika Kessuma Denie
-							</h3>
-							<p class="text-xs text-gray-500 mt-1">
-								Author Website
-							</p>
+					<div
+						class="px-4 py-2 border border-gray-200 rounded-lg bg-white shadow-sm flex flex-col items-center">
+						<div class="mb-3">
+							<img
+								src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/customer/customer15.jpg "
+								alt="User Avatar"
+								class="w-16 h-16 object-cover rounded-full border-2 border-indigo-100 shadow-sm" />
 						</div>
-					</Transition>
+						<h3
+							class="text-sm font-semibold text-gray-800 text-center">
+							Mahardika Kessuma Denie
+						</h3>
+						<p class="text-xs text-gray-500 mt-1">
+							Author Website
+						</p>
+					</div>
 				</div>
 
 				<!-- Navigation -->
