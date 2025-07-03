@@ -24,25 +24,25 @@ export interface Summary {
 
 const summaries = ref<Summary[]>([
 	{
-		name: 'Total Companies',
+		name: 'Total Users',
 		value: 5672,
 		percentage: 20,
 		icon: markRaw(buildingIcon),
 	},
 	{
-		name: 'Active Companies',
+		name: 'Active Users',
 		value: 4576,
 		percentage: 20,
 		icon: markRaw(carouselVerticalIcon),
 	},
 	{
-		name: 'Total Subscribers',
+		name: 'Non Active Users',
 		value: 3696,
 		percentage: 20,
 		icon: markRaw(chalkboardIcon),
 	},
 	{
-		name: 'Total Earning',
+		name: 'New User This Month',
 		value: 8987858,
 		percentage: 40,
 		icon: markRaw(bussinesPlanIcon),
