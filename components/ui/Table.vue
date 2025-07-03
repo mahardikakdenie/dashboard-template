@@ -9,13 +9,40 @@
 			<div>
 				<InputFeature placeholder="Search" />
 			</div>
-			<div class="">
+			<div class="flex flex-wrap items-center gap-4">
+				<!-- Create Data Button -->
 				<button
-					class="border border-green-300 bg-green-400 px-4 rounded text-gray-100 py-2 text-sm hover:bg-green-500 cursor-pointer font-semibold">
+					class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-600 border border-slate-700 rounded-md shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-200">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="w-4 h-4"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M12 4v16m8-8H4" />
+					</svg>
 					Create Data
 				</button>
+
+				<!-- Filter Button -->
 				<button
-					class="border border-green-300 bg-green-400 px-6 rounded text-gray-100 py-2 text-sm hover:bg-green-500 cursor-pointer font-semibold">
+					class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-500 border border-slate-600 rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 transition-all duration-200">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="w-4 h-4"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707v5.172a1 1 0 01-.293.707l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 01-.293-.707v-5.172a1 1 0 00-.293-.707L3.293 5.293A1 1 0 013 4.586V4z" />
+					</svg>
 					Filter
 				</button>
 			</div>
@@ -27,10 +54,10 @@
 						<BaseCheckbox />
 					</th>
 					<th
-						v-for="thead in theadCompanies"
+						v-for="thead in headers"
 						:key="thead.key"
 						scope="col"
-						class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+						class="px-6 py-3 text-left text-xs font-bold text-slate-500 capitalize tracking-wider">
 						{{ thead.name }}
 					</th>
 				</tr>
@@ -43,15 +70,49 @@
 							<BaseCheckbox />
 						</td>
 						<td
-							v-for="(i, key) in data"
+							v-for="([key, value], idx) in Object.entries(data)"
 							:key="key"
 							class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-							<span>
-								{{ data[key] }}
+							<div v-if="key === 'actions'">
+								<div class="flex items-center space-x-2">
+									<button
+										class="text-blue-600 hover:text-blue-800"
+										@click="$emit('delete', data)">
+										<IconsTrash
+											class="w-4 h-4 text-red-500" />
+									</button>
+									<button
+										class="text-red-600 hover:text-red-800"
+										@click="$emit('update', data)">
+										<IconsUpdate
+											class="w-4 h-4 text-blue-500" />
+									</button>
+								</div>
+							</div>
+							<div v-else-if="key === 'status'">
+								<span
+									class="px-2 py-1 rounded-full text-xs font-semibold"
+									:class="{
+										'bg-green-100 text-green-800':
+											value === 'Active',
+										'bg-red-100 text-red-800':
+											value === 'Inactive',
+										'bg-yellow-100 text-yellow-800':
+											value === 'Pending',
+									}">
+									{{ value }}
+								</span>
+							</div>
+							<span v-else>
+								{{ value }}
 							</span>
 						</td>
 					</tr>
-					<tr v-if="!paginatedData || (paginatedData && paginatedData.length === 0)">
+					<tr
+						v-if="
+							!paginatedData ||
+							(paginatedData && paginatedData.length === 0)
+						">
 						<td colspan="6" class="py-10 text-center space-y-3">
 							<div class="flex justify-center">
 								<svg
@@ -107,7 +168,8 @@
 			</div>
 
 			<div v-else>
-				<span class="px-3 py-1 rounded-md text-sm font-medium transition">
+				<span
+					class="px-3 py-1 rounded-md text-sm font-medium transition">
 					0
 				</span>
 			</div>
@@ -134,7 +196,30 @@ const props = withDefaults(
 		headers?: Header[];
 		datas?: any[];
 	}>(),
-	{}
+	{
+		headers: () => [
+			{
+				name: 'Company Name',
+				key: 'name',
+			},
+			{
+				name: 'Email',
+				key: 'email',
+			},
+			{
+				name: 'Account URL',
+				key: 'url',
+			},
+			{
+				name: 'Status',
+				key: 'status',
+			},
+			{
+				name: 'Actions',
+				key: 'actions',
+			},
+		],
+	}
 );
 
 const theadCompanies = ref<
@@ -162,7 +247,7 @@ const theadCompanies = ref<
 	{
 		name: 'Actions',
 		key: 'actions',
-	}
+	},
 ]);
 
 const currentPage = ref(1);
