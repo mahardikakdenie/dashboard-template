@@ -15,6 +15,8 @@ import uxCircleIcon from '../components/icons/ux-circle.vue';
 import alertIcon from '../components/icons/alert.vue';
 import usersIcon from '../components/icons/users.vue';
 import lockIcon from '../components/icons/lock.vue';
+import salesIcon from '~/components/icons/sales.vue';
+import cvIcon from '~/components/icons/cv.vue';
 
 export const MenuSidebar = [
 	{
@@ -110,6 +112,16 @@ export const MenuSidebar = [
 				icon: markRaw(storeIcon),
 				url: '/theme/theme-monitoring',
 			},
+			{
+				name:'POS Theme',
+				icon: markRaw(salesIcon),
+				url: '/theme/pos-theme',
+			},
+			{
+				name:'CV Theme',
+				icon: markRaw(cvIcon),
+				url: '/theme/cv-theme',
+			}
 		],
 	},
 	{
