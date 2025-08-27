@@ -1,5 +1,5 @@
 <template>
-	<nav class="bg-gray-50 dark:bg-gray-900">
+	<nav class="bg-gray-50 -900">
 		<div
 			class="flex flex-wrap items-center justify-between mx-auto px-4 py-5">
 			<InputFeature placeholder="Search" />
@@ -8,19 +8,19 @@
 				<button
 					type="button"
 					data-dropdown-toggle="language-dropdown-menu"
-					class="inline-flex items-center font-medium justify-center px-4 py-2 text-sm text-gray-900 dark:text-white rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
+					class="inline-flex items-center font-medium justify-center px-4 py-2 text-sm text-gray-900  rounded-lg cursor-pointer hover:bg-gray-100 -gray-700 -white">
 					<IconsLangEn />
 					English (US)
 				</button>
 				<!-- Dropdown -->
 				<div
-					class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700"
+					class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg -700"
 					id="language-dropdown-menu">
 					<ul class="py-2 font-medium" role="none">
 						<li>
 							<a
 								href="#"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 -400 -gray-600 -white"
 								role="menuitem">
 								<div class="inline-flex items-center">
 									<IconsLangEn />
@@ -31,7 +31,7 @@
 						<li>
 							<a
 								href="#"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 -400 -gray-600 -white"
 								role="menuitem">
 								<div class="inline-flex items-center">
 									<svg
@@ -55,7 +55,7 @@
 						<li>
 							<a
 								href="#"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 -400 -gray-600 -white"
 								role="menuitem">
 								<div class="inline-flex items-center">
 									<svg
@@ -85,7 +85,7 @@
 						<li>
 							<a
 								href="#"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 -400 -gray-600 -white"
 								role="menuitem">
 								<div class="inline-flex items-center">
 									<svg
@@ -139,7 +139,7 @@
 				<button
 					data-collapse-toggle="navbar-language"
 					type="button"
-					class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+					class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 -400 -gray-700 -gray-600"
 					aria-controls="navbar-language"
 					aria-expanded="false">
 					<span class="sr-only">Open main menu</span>

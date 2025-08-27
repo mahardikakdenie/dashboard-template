@@ -11,4 +11,7 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
+  runtimeConfig: {
+    port: 3001,
+  }
 })
