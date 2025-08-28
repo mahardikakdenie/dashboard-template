@@ -51,7 +51,7 @@
 			<thead class="bg-gray-50">
 				<tr>
 					<th>
-						<BaseCheckbox />
+						<BaseCheckbox :checked="false" />
 					</th>
 					<th
 						v-for="thead in headers"
@@ -67,7 +67,7 @@
 				<tbody>
 					<tr v-for="(data, index) in paginatedData" :key="index">
 						<td>
-							<BaseCheckbox />
+							<BaseCheckbox :checked="false" />
 						</td>
 						<td
 							v-for="([key, value], idx) in Object.entries(data)"
