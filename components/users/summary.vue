@@ -1,15 +1,14 @@
 <template>
-    <div class="mt-4">
-			<div class="grid grid-cols-4 gap-4">
-				<div v-for="(summary, i) in summaries" :key="i">
-					<SummaryBox :summary="summary" />
-				</div>
+	<div class="mt-4">
+		<div class="grid sm:grid-cols-2 md:grid-cols-4 grid-cols-1 gap-4">
+			<div v-for="(summary, i) in summaries" :key="i">
+				<SummaryBox :summary="summary" />
 			</div>
 		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
-
 import buildingIcon from '~/components/icons/building.vue';
 import carouselVerticalIcon from '~/components/icons/carousel-vertical.vue';
 import chalkboardIcon from '~/components/icons/chalkboard.vue';
