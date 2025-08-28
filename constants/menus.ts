@@ -136,4 +136,17 @@ export const MenuSidebar = [
 			},
 		],
 	},
+	{
+		name: 'Auth View',
+		key: 'auth-view',
+		icon: markRaw(lockIcon),
+		child: [
+			{
+				name: 'Auth Login UI 1',
+				icon: markRaw(lockIcon),
+				url: '/auth/login',
+				isBlank: true,
+			},
+		],
+	},
 ];

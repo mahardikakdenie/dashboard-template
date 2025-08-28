@@ -99,7 +99,7 @@
 								'text-gray-600 hover:bg-gray-100':
 									item.url !== $route.fullPath,
 							}"
-							@click="$router.push(item.url)">
+							@click="onNavigate(item)">
 							<div v-if="item.url" class="flex">
 								<component
 									v-if="item.icon"
@@ -191,13 +191,18 @@ export interface Menus {
 		name: string;
 		url: string;
 		icon?: any;
-		children?: {
+		children?: ChildMenus[];
+	}[];
+}
+
+export interface ChildMenus {
 			name: string;
 			url: string;
             isOpen?: boolean,
-		}[];
-	}[];
-}
+			isBlank? : boolean,
+		}
+
+const router = useRouter();
 
 // Simpan status open/close dropdown berdasarkan nama menu
 const openMenus = ref<any>({});
@@ -235,6 +240,14 @@ const autoOpenDropdowns = () => {
         }
     });
     return openState;
+};
+
+const onNavigate = (item: ChildMenus) => {
+	if (item.isBlank) {
+		window.open(item.url, '_blank');
+	} else {
+		router.push(item.url);
+	}
 };
 
 onMounted(() => {
