@@ -184,7 +184,6 @@ function nextPage() {
 					</td>
 				</tr>
 
-				<!-- Data Tersedia & Tidak Loading -->
 				<template v-else>
 					<tr
 						v-for="(data, index) in paginatedData"
