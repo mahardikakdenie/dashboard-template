@@ -1,4 +1,6 @@
 export type ThemeDatas = {
+    id: string;
+    created_at: string;
     author: string;
     image: string;
     name: string;
