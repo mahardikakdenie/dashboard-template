@@ -44,7 +44,9 @@ onMounted(async () => {
 		</div>
 		<!-- End Tabbing -->
 
+		
 		<div>
+			<UsersSummary v-if="currentTabs === 'table'" />
 			<UiTable
 				v-if="currentTabs === 'table'"
 				:is-loading="isLoading"
@@ -58,6 +60,10 @@ onMounted(async () => {
 					{
 						name: 'Author',
 						key: 'author',
+					},
+					{
+						name: 'Created At',
+						key: 'created_at'
 					},
 					{
 						name: 'Actions',

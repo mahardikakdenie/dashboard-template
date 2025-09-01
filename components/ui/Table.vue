@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import dayjs from 'dayjs';
+
 interface Header {
 	name: string;
 	key: string;
@@ -209,6 +211,10 @@ function nextPage() {
               <p class="text-xs text-slate-500">🎨 Tema yang digunakan</p>
             </div>
           </div>
+
+		  <div v-else-if="key === 'created_at'">
+			{{ dayjs(data.created_at).format('DD MMMM YYYY') }}
+		  </div>
 
           <span
             v-else-if="key === 'status'"

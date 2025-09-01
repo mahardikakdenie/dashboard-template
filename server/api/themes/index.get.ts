@@ -8,6 +8,7 @@ export default defineEventHandler(async () => {
         image: data.image
     },
     author: data.author,
+    created_at: themes[0].createdAt,
     actions: null,
   }));
 });
