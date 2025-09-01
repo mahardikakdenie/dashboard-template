@@ -1,3 +1,29 @@
+<script lang="ts" setup>
+import usePostHook from '~/hooks/themes/pos/pos.hooks';
+import type { ThemeResult } from '~/types/themes.types';
+
+const { tabs, currentTabs } = usePostHook();
+
+const themes = ref<ThemeResult[]>([]);
+const isLoading = ref<boolean>(true);
+const getDataThemes = async () => {
+	isLoading.value = true;
+	try {
+		const fetchedThemes = await $fetch<ThemeResult[]>('/api/themes');
+		isLoading.value = false;
+
+		themes.value = fetchedThemes;
+	} catch (error) {
+		isLoading.value = false;
+	}
+};
+
+onMounted(async () => {
+	await getDataThemes();
+});
+</script>
+
+
 <template>
 	<div>
 		<!-- Tabbing -->
@@ -64,28 +90,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" setup>
-import usePostHook from '~/hooks/themes/pos/pos.hooks';
-import type { ThemeResult } from '~/types/themes.types';
-
-const { tabs, currentTabs } = usePostHook();
-
-const themes = ref<ThemeResult[]>([]);
-const isLoading = ref<boolean>(true);
-const getDataThemes = async () => {
-	isLoading.value = true;
-	try {
-		const fetchedThemes = await $fetch<ThemeResult[]>('/api/themes');
-		isLoading.value = false;
-
-		themes.value = fetchedThemes;
-	} catch (error) {
-		isLoading.value = false;
-	}
-};
-
-onMounted(async () => {
-	await getDataThemes();
-});
-</script>
