@@ -12,7 +12,7 @@
 		</aside>
 
 		<!-- Main Content Area -->
-		<div class="flex flex-col flex-1 overflow-hidden">
+		<div class="flex flex-col flex-1 overflow-hidden relative">
 			<!-- Navbar -->
 			<header class="bg-white z-20">
 				<Navbar @toggle-sidebar="toggleSidebar" />

@@ -4,11 +4,11 @@ const usePostHook = () => {
         key: string;
     }[]>([
         {
-            name: 'Table List',
+            name: 'table_list',
             key: 'table',
         },
         {
-            name: 'Box List',
+            name: 'box_list',
             key: 'box',
         },
     ]);

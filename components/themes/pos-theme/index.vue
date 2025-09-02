@@ -39,7 +39,7 @@ onMounted(async () => {
 						? 'bg-blue-100 text-blue-700 shadow-sm'
 						: 'text-slate-500 hover:text-slate-700 hover:bg-slate-100',
 				]">
-				{{ tab.name }}
+				{{ $t(tab.name) }}
 			</div>
 		</div>
 		<!-- End Tabbing -->
