@@ -93,6 +93,14 @@ const prevPage = () => {
 const nextPage = () => {
 	if (currentPage.value < totalPages.value) currentPage.value++;
 }
+
+// 
+
+const emit = defineEmits(['open-modal-create', 'delete', 'update']);
+
+const openModalCreate = () => {
+	emit('open-modal-create');
+};
 </script>
 
 <template>
@@ -114,7 +122,7 @@ const nextPage = () => {
 						'transition-all duration-200',
 						'text-white bg-slate-600 border border-slate-700 rounded-md shadow-sm',
 						'hover:bg-slate-700 focus:outline-none focus:ring-2'
-					]">
+					]" @click="openModalCreate">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						class="w-4 h-4"

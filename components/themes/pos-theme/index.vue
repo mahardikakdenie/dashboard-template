@@ -26,7 +26,7 @@ const { tabs, currentTabs } = usePostHook();
 const themes = ref<ThemeResult[]>([]);
 const summary = ref<ThemeSummaryResp>({
 	all: 0,
-})
+});
 const isLoading = ref<boolean>(true);
 const isSummaryLoading = ref<boolean>(true);
 
@@ -53,11 +53,13 @@ const getDataThemes = async () => {
  */
 const getDataSummary = async () => {
 	try {
-		const fetchSummary = await $fetch<ThemeSummaryResp>('/api/themes/summaries');
+		const fetchSummary = await $fetch<ThemeSummaryResp>(
+			'/api/themes/summaries'
+		);
 		isSummaryLoading.value = false;
 		summary.value = fetchSummary;
 	} catch (error) {
-		console.log("error summary", error);
+		console.log('error summary', error);
 		isSummaryLoading.value = false;
 	}
 };
@@ -71,28 +73,46 @@ onMounted(async () => {
 <template>
 	<div>
 		<!-- Tabbing -->
-		<div class="p-2 rounded-xl bg-white shadow-sm border border-slate-200 flex space-x-1">
-			<div v-for="tab in tabs" :key="tab.key" @click="currentTabs = tab.key" :class="[
-				'px-5 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer',
-				currentTabs === tab.key
-					? 'bg-blue-100 text-blue-700 shadow-sm'
-					: 'text-slate-500 hover:text-slate-700 hover:bg-slate-100',
-			]">
+		<div
+			class="p-2 rounded-xl bg-white shadow-sm border border-slate-200 flex space-x-1">
+			<div
+				v-for="tab in tabs"
+				:key="tab.key"
+				@click="currentTabs = tab.key"
+				:class="[
+					'px-5 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer',
+					currentTabs === tab.key
+						? 'bg-blue-100 text-blue-700 shadow-sm'
+						: 'text-slate-500 hover:text-slate-700 hover:bg-slate-100',
+				]">
 				{{ $t(tab.name) }}
 			</div>
 		</div>
 		<!-- End Tabbing -->
 
 		<div>
-			<themes-pos-theme-summary :summary="summary" v-if="currentTabs === 'table' && !isSummaryLoading" />
-			<UiTable v-if="currentTabs === 'table'" :is-loading="isLoading" :show-title="false" :datas="themes"
-				:headers="headers" />
-			<div v-if="currentTabs === 'box'"
+			<themes-pos-theme-summary
+				:summary="summary"
+				v-if="currentTabs === 'table' && !isSummaryLoading" />
+			<UiTable
+				v-if="currentTabs === 'table'"
+				:is-loading="isLoading"
+				:show-title="false"
+				:datas="themes"
+				:headers="headers"
+				@open-modal-create="isOpenModal = !isOpenModal"
+			/>
+			<div
+				v-if="currentTabs === 'box'"
 				class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-				<div v-for="(theme, i) in themes" :key="i"
+				<div
+					v-for="(theme, i) in themes"
+					:key="i"
 					class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
 					<div class="aspect-video overflow-hidden">
-						<img :src="theme?.themes.image" alt="Theme Preview"
+						<img
+							:src="theme?.themes.image"
+							alt="Theme Preview"
 							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
 					</div>
 					<div class="p-4">
@@ -108,12 +128,20 @@ onMounted(async () => {
 		</div>
 
 		<!-- Modal Create Themes -->
-		<BaseModal v-if="isOpenModal" width="3xl" title="Create Theme" @close-modal="isOpenModal = !isOpenModal">
+		<BaseModal
+			v-if="isOpenModal"
+			width="3xl"
+			title="Create Theme"
+			@close-modal="isOpenModal = !isOpenModal">
 			<div>
 				<form class="">
 					<div class="grid grid-cols-12 gap-2">
-						<div v-for="i in 4" :key="i" class="w-full block col-span-12">
-							<input type="text"
+						<div
+							v-for="i in 4"
+							:key="i"
+							class="w-full block col-span-12">
+							<input
+								type="text"
 								class="w-full px-4 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ease-in-out shadow-sm hover:shadow"
 								placeholder="Masukkan data" />
 						</div>
