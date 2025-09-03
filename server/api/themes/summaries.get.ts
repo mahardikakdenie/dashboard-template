@@ -1,4 +1,4 @@
-import { Themes } from '~/types/themes.types';
+import { Themes, ThemeSummaryResp } from '~/types/themes.types';
 
 // const data = {
 // 	Q1: [
@@ -225,7 +225,13 @@ import { Themes } from '~/types/themes.types';
 //         "CYBER DAN PERTAHANAN"
 //     ]
 // };
-export default defineEventHandler(async () => {
+
+/**
+ * Handler Response Theme Summary
+ * 
+ * @return ThemeSummaryResp
+ */
+export default defineEventHandler<Promise<ThemeSummaryResp>>(async () => {
 	const themes = await $fetch<Themes[]>(
 		'https://685bc2c289952852c2dadda2.mockapi.io/api/databases?name=themes'
 	);

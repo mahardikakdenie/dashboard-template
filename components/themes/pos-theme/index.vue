@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import usePostHook from '~/hooks/themes/pos/pos.hooks';
-import type { ThemeResult } from '~/types/themes.types';
+import type { ThemeResult, ThemeSummaryResp } from '~/types/themes.types';
 
 const headers = [
 	{
@@ -24,7 +24,15 @@ const headers = [
 const { tabs, currentTabs } = usePostHook();
 
 const themes = ref<ThemeResult[]>([]);
+const summary = ref<ThemeSummaryResp>({
+	all: 0,
+})
 const isLoading = ref<boolean>(true);
+const isSummaryLoading = ref<boolean>(true);
+
+/**
+ * Get Data Themes
+ */
 const getDataThemes = async () => {
 	isLoading.value = true;
 	try {
@@ -37,8 +45,23 @@ const getDataThemes = async () => {
 	}
 };
 
+/**
+ * Get data summary themes
+ */
+const getDataSummary = async () => {
+	try {
+		const fetchSummary = await $fetch<ThemeSummaryResp>('/api/themes/summaries');
+		isSummaryLoading.value = false;
+		summary.value = fetchSummary;
+	} catch (error) {
+		console.log("error summary", error);
+		isSummaryLoading.value = false;
+	}
+};
+
 onMounted(async () => {
 	await getDataThemes();
+	await getDataSummary();
 });
 </script>
 
@@ -63,7 +86,7 @@ onMounted(async () => {
 		<!-- End Tabbing -->
 
 		<div>
-			<UsersSummary v-if="currentTabs === 'table'" />
+			<themes-pos-theme-summary :summary="summary" v-if="currentTabs === 'table' && !isSummaryLoading" />
 			<UiTable
 				v-if="currentTabs === 'table'"
 				:is-loading="isLoading"

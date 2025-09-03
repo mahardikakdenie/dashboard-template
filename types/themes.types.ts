@@ -20,3 +20,15 @@ export type ThemeResult = {
     },
     author: string;
 }
+
+
+export type ThemeSummary = {
+	name: string;
+	value: number;
+	percentage: number;
+	icon: any;
+}
+
+export type ThemeSummaryResp = {
+    all: number;
+}
