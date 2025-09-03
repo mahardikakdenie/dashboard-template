@@ -44,14 +44,14 @@ const props = withDefaults(
 const currentPage = ref(1);
 const itemsPerPage = 5;
 
-// Hitung data untuk halaman saat ini
+// count data for current page
 const paginatedData = computed(() => {
 	const start = (currentPage.value - 1) * itemsPerPage;
 	const end = start + itemsPerPage;
 	return props?.datas?.slice(start, end);
 });
 
-// Tampilkan maksimal 5 tombol halaman
+// show max 5 button page
 const pages = computed(() => {
 	const total = totalPages.value;
 	const current = currentPage.value;
@@ -80,12 +80,12 @@ function goToPage(page: any) {
 	if (typeof page === 'number') currentPage.value = page;
 }
 
-// Total halaman
+// Total pages
 const totalPages = computed(() =>
 	Math.ceil((props?.datas?.length || 0) / itemsPerPage)
 );
 
-// Fungsi navigasi
+// Navigation Page
 function prevPage() {
 	if (currentPage.value > 1) currentPage.value--;
 }
