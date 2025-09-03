@@ -100,8 +100,7 @@ onMounted(async () => {
 				:show-title="false"
 				:datas="themes"
 				:headers="headers"
-				@open-modal-create="isOpenModal = !isOpenModal"
-			/>
+				@open-modal-create="isOpenModal = !isOpenModal" />
 			<div
 				v-if="currentTabs === 'box'"
 				class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
@@ -128,26 +127,8 @@ onMounted(async () => {
 		</div>
 
 		<!-- Modal Create Themes -->
-		<BaseModal
+		<ThemesPosThemeModalCreate
 			v-if="isOpenModal"
-			width="3xl"
-			title="Create Theme"
-			@close-modal="isOpenModal = !isOpenModal">
-			<div>
-				<form class="">
-					<div class="grid grid-cols-12 gap-2">
-						<div
-							v-for="i in 4"
-							:key="i"
-							class="w-full block col-span-12">
-							<input
-								type="text"
-								class="w-full px-4 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ease-in-out shadow-sm hover:shadow"
-								placeholder="Masukkan data" />
-						</div>
-					</div>
-				</form>
-			</div>
-		</BaseModal>
+			@on-close-modal="isOpenModal = !isOpenModal" />
 	</div>
 </template>
