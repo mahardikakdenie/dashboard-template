@@ -32,7 +32,7 @@ const props = defineProps({
 });
 
 // Emits
-const emit = defineEmits(['update:isOpen', 'confirm']);
+const emit = defineEmits(['close-modal', 'confirm']);
 
 // Mapping ukuran ke Tailwind max-width
 const widthMap = {
@@ -53,7 +53,7 @@ const widthClass = computed(() => widthMap[props.width] || widthMap.md);
 
 // Tutup modal
 const closeModal = () => {
-  emit('update:isOpen', false);
+  emit('close-modal', false);
 };
 
 // Aksi konfirmasi

@@ -30,6 +30,9 @@ const summary = ref<ThemeSummaryResp>({
 const isLoading = ref<boolean>(true);
 const isSummaryLoading = ref<boolean>(true);
 
+// Modal State
+const isOpenModal = ref<boolean>(true);
+
 /**
  * Get Data Themes
  */
@@ -103,7 +106,7 @@ onMounted(async () => {
 				</div>
 			</div>
 		</div>
-		<BaseModal width="3xl" title="Create Theme">
+		<BaseModal v-if="isOpenModal" width="3xl" title="Create Theme" @close-modal="isOpenModal = !isOpenModal">
 			<div>
 				<form class="">
 					<div class="grid grid-cols-12 gap-2">
