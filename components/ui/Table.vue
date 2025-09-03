@@ -110,8 +110,8 @@ function nextPage() {
 				<!-- Create Data Button -->
 				<button
 					:class="[
-						'flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold focus:ring-offset-2',
-						'focus:ring-slate-500 transition-all duration-200',
+						'flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold',
+						'transition-all duration-200',
 						'text-white bg-slate-600 border border-slate-700 rounded-md shadow-sm',
 						'hover:bg-slate-700 focus:outline-none focus:ring-2'
 					]">

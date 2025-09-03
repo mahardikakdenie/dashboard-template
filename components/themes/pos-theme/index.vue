@@ -31,7 +31,7 @@ const isLoading = ref<boolean>(true);
 const isSummaryLoading = ref<boolean>(true);
 
 // Modal State
-const isOpenModal = ref<boolean>(true);
+const isOpenModal = ref<boolean>(false);
 
 /**
  * Get Data Themes
@@ -106,7 +106,7 @@ onMounted(async () => {
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- Modal Create Themes -->
 		<BaseModal v-if="isOpenModal" width="3xl" title="Create Theme" @close-modal="isOpenModal = !isOpenModal">
 			<div>
