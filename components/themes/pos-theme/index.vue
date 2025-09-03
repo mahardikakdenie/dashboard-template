@@ -2,6 +2,25 @@
 import usePostHook from '~/hooks/themes/pos/pos.hooks';
 import type { ThemeResult } from '~/types/themes.types';
 
+const headers = [
+	{
+		name: 'Name Theme',
+		key: 'name_theme',
+	},
+	{
+		name: 'Author',
+		key: 'author',
+	},
+	{
+		name: 'Created At',
+		key: 'created_at',
+	},
+	{
+		name: 'Actions',
+		key: 'actions',
+	},
+];
+
 const { tabs, currentTabs } = usePostHook();
 
 const themes = ref<ThemeResult[]>([]);
@@ -23,7 +42,6 @@ onMounted(async () => {
 });
 </script>
 
-
 <template>
 	<div>
 		<!-- Tabbing -->
@@ -44,7 +62,6 @@ onMounted(async () => {
 		</div>
 		<!-- End Tabbing -->
 
-		
 		<div>
 			<UsersSummary v-if="currentTabs === 'table'" />
 			<UiTable
@@ -52,24 +69,7 @@ onMounted(async () => {
 				:is-loading="isLoading"
 				:show-title="false"
 				:datas="themes"
-				:headers="[
-					{
-						name: 'Name Theme',
-						key: 'name_theme',
-					},
-					{
-						name: 'Author',
-						key: 'author',
-					},
-					{
-						name: 'Created At',
-						key: 'created_at'
-					},
-					{
-						name: 'Actions',
-						key: 'actions'
-					}
-				]" />
+				:headers="headers" />
 			<div
 				v-if="currentTabs === 'box'"
 				class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
