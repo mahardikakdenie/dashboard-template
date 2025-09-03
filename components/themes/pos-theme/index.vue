@@ -106,6 +106,8 @@ onMounted(async () => {
 				</div>
 			</div>
 		</div>
+		
+		<!-- Modal Create Themes -->
 		<BaseModal v-if="isOpenModal" width="3xl" title="Create Theme" @close-modal="isOpenModal = !isOpenModal">
 			<div>
 				<form class="">
