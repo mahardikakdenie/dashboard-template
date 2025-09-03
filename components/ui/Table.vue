@@ -86,11 +86,11 @@ const totalPages = computed(() =>
 );
 
 // Navigation Page
-function prevPage() {
+const prevPage = () => {
 	if (currentPage.value > 1) currentPage.value--;
 }
 
-function nextPage() {
+const nextPage = () => {
 	if (currentPage.value < totalPages.value) currentPage.value++;
 }
 </script>
