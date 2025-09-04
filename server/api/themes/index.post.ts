@@ -6,6 +6,7 @@ const themeItemSchema = z.object({
 	name: z.string(),
 	image: z.string(),
 	author: z.string(),
+	status: z.string(),
 });
 
 const config = useRuntimeConfig();
