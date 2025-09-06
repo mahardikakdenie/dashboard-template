@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-const emit = defineEmits(['on-close-modal']);
+const emit = defineEmits(['on-close-modal', 'submit']);
 const closeModal = () => {
 	emit('on-close-modal');
 };
@@ -10,8 +10,14 @@ const closeModal = () => {
 const imageFile = ref<File | null>(null);
 const imagePreview = ref<string | null>(null);
 
+const configForm = ref({
+	name: '',
+	status: 'pending',
+	imageUrl: '',
+});
+
 // Fungsi saat gambar dipilih
-const onImageSelected = (event: Event) => {
+const onImageSelected = async (event: Event) => {
 	const target = event.target as HTMLInputElement;
 	const file = target.files?.[0];
 
@@ -24,12 +30,33 @@ const onImageSelected = (event: Event) => {
 			imagePreview.value = e.target?.result as string;
 		};
 		reader.readAsDataURL(file);
+
+		const formData = new FormData();
+		formData.append('image', file);
+		
+		try {
+			const response = await $fetch('/api/media', {
+				method: 'POST',
+				body: formData,
+			});
+
+			console.log("response : ", response);
+			configForm.value.imageUrl = response.data;		
+		} catch (error) {
+			console.error('Error uploading image:', error);
+		}
 	}
 };
+
+const onSubmit = () => {
+	console.log("Submitted form data:", configForm.value);
+	emit('submit', configForm.value);
+	closeModal();
+}
 </script>
 
 <template>
-	<BaseModal width="3xl" title="Create Theme" @close-modal="closeModal">
+	<BaseModal width="3xl" title="Create Theme" @close-modal="closeModal" @confirm="onSubmit">
 		<div>
 			<form class="space-y-4">
 				<div class="grid grid-cols-12 gap-4">
@@ -40,6 +67,7 @@ const onImageSelected = (event: Event) => {
 							>Name Theme</label
 						>
 						<input
+							v-model="configForm.name"
 							type="text"
 							class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ease-in-out shadow-sm hover:shadow"
 							placeholder="Masukkan data Nama Tema POS" />
@@ -53,6 +81,7 @@ const onImageSelected = (event: Event) => {
 						>
 						<div class="relative">
 							<select
+								v-model="configForm.status"
 								class="w-full px-4 py-2 pl-3 pr-10 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-300 ease-in-out shadow-sm hover:shadow-md appearance-none cursor-pointer">
 								<option
 									value="pending"

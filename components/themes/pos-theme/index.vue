@@ -64,6 +64,31 @@ const getDataSummary = async () => {
 	}
 };
 
+/**
+ * Create new theme
+ */
+const onCreateTheme = async (formData: { name: string; status: string; imageUrl: string }) => {
+	try {
+		const body = {
+			name: formData.name,
+			status: formData.status,
+			image: formData.imageUrl,
+			author: 'Mahardika'
+		}
+		const response = await $fetch('/api/themes', {
+			method: 'POST',
+			body: body,
+		});
+		console.log('Theme created successfully:', response);
+		isOpenModal.value = false;
+		await getDataThemes();
+		await getDataSummary();
+	} catch (error) {
+		console.error('Error creating theme:', error);
+	}
+
+};
+
 onMounted(async () => {
 	await getDataThemes();
 	await getDataSummary();
@@ -129,6 +154,6 @@ onMounted(async () => {
 		<!-- Modal Create Themes -->
 		<ThemesPosThemeModalCreate
 			v-if="isOpenModal"
-			@on-close-modal="isOpenModal = !isOpenModal" />
+			@on-close-modal="isOpenModal = !isOpenModal" @submit="onCreateTheme" />
 	</div>
 </template>

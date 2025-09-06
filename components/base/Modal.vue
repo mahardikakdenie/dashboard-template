@@ -5,10 +5,6 @@ import { defineProps, defineEmits } from 'vue';
 
 // Props
 const props = defineProps({
-  isOpen: {
-    type: Boolean,
-    required: true,
-  },
   title: {
     type: String,
     default: 'Modal Title',
