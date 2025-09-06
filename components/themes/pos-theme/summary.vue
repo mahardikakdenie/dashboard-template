@@ -26,7 +26,7 @@ onMounted(() => {
 
 <template>
 	<div class="mt-4">
-		<div class="grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 gap-4">
+		<div class="grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 grid-cols-1 gap-4">
 			<div v-for="(summary, i) in summaries" :key="i">
 				<SummaryBox :summary="summary" />
 			</div>
