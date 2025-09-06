@@ -8,6 +8,10 @@ const headers = [
 		key: 'name_theme',
 	},
 	{
+		name: 'Status',
+		key: 'status',
+	},
+	{
 		name: 'Author',
 		key: 'author',
 	},
@@ -137,7 +141,7 @@ onMounted(async () => {
 						<img
 							:src="theme?.themes.image"
 							alt="Theme Preview"
-							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+							class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
 					</div>
 					<div class="p-4">
 						<h3 class="text-sm font-semibold text-slate-800">

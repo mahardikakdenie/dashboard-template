@@ -249,14 +249,14 @@ const openModalCreate = () => {
 
 							<span
 								v-else-if="key === 'status'"
-								class="px-2 py-1 rounded-full text-xs font-semibold"
+								class="px-2 py-1 rounded-full text-xs font-semibold capitalize"
 								:class="{
 									'bg-green-100 text-green-800':
 										value === 'Active',
 									'bg-red-100 text-red-800':
 										value === 'Inactive',
 									'bg-yellow-100 text-yellow-800':
-										value === 'Pending',
+										value === 'pending',
 								}">
 								{{ value }}
 							</span>

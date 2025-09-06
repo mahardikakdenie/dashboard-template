@@ -4,6 +4,7 @@ export type ThemeDatas = {
     author: string;
     image: string;
     name: string;
+    status: string;
 }
 
 export type Themes = {

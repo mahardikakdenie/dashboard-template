@@ -8,7 +8,8 @@ export default defineEventHandler(async () => {
         name: data.name,
         image: data.image,
         created_at: new Date(data.created_at)
-    },
+      },
+    status: data.status ?? 'pending',
     author: data.author,
     created_at: themes[0].createdAt,
     actions: null,
