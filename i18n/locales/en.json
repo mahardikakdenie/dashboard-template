@@ -1,5 +1,11 @@
 {
   "welcome": "Welcome",
   "box_list": "Box List",
-  "table_list": "Table List"
+  "table_list": "Table List",
+  "Name": "Name",
+  "Email": "Email",
+  "Status": "Status",
+  "Roles": "Role",
+  "Actions": "Actions",
+  "loading_text": "Loading data, please wait..."
 }

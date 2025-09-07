@@ -168,7 +168,7 @@ const openModalCreate = () => {
 						:key="thead.key"
 						scope="col"
 						class="px-6 py-3 text-left text-xs font-bold text-slate-500 capitalize tracking-wider">
-						{{ thead.name }}
+						{{ $t(thead.name) }}
 					</th>
 				</tr>
 			</thead>
@@ -186,7 +186,7 @@ const openModalCreate = () => {
 								alt="Loading..."
 								class="w-40 h-40" />
 							<p class="text-sm text-slate-500">
-								Memuat data, harap tunggu...
+								{{ $t("loading_text") }}
 							</p>
 						</div>
 					</td>
@@ -254,7 +254,7 @@ const openModalCreate = () => {
 									'bg-green-100 text-green-800':
 										value === 'Active',
 									'bg-red-100 text-red-800':
-										value === 'Inactive',
+										value === 'Inactive' || value === 'inactive',
 									'bg-yellow-100 text-yellow-800':
 										value === 'pending',
 								}">

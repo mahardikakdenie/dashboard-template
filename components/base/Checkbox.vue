@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
-    checked: boolean;
+    checked?: boolean;
 }>(), {
     checked: false,
 });
