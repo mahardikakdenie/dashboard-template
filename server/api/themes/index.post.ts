@@ -66,14 +66,14 @@ export default defineEventHandler(async (event) => {
 
 		themesData.datas.push(newItem);
 
-		const updatedThemes: Themes = await $fetch(
+		const updatedThemes = await $fetch<any>(
 			`${config.public.apiBaseUrl}/${themesData.id}`,
 			{
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
 				body: themesData,
 			}
-		);
+		) as Themes;
 
 		return {
 			success: true,
