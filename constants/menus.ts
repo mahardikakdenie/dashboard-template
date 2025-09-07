@@ -54,6 +54,19 @@ export const MenuSidebar = [
 			},
 		],
 	},
+	{
+		name: 'Master Data',
+		key: 'master-data',
+		icon: markRaw(domainIcon),
+		roles: ['admin', 'superadmin'],
+		child: [
+			{
+				name: 'Databases',
+				icon: markRaw(domainIcon),
+				url: '/master-data/categories',				
+			}
+		],
+	},
     {
         name: 'Users',
         key: 'users',
