@@ -9,13 +9,13 @@
 				<!-- Logo -->
 				<div class="flex items-center justify-between px-4 py-5 ">
 					<div class="flex items-center space-x-2">
-						<img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/logo.svg"
+						<img src="https://ensiklotari.id/_nuxt/img/logo.ee6db58.png"
 							width="130" alt="" />
 					</div>
 					<button class=" bg-white rounded-full p-0" @click="showNav = !showNav">
-						<img v-if="showNav" src="https://cdn-icons-png.flaticon.com/512/9179/9179580.png" width="15"
+						<img v-if="showNav" src="https://ensiklotari.id/_nuxt/img/logo.ee6db58.png" width="15"
 							alt="">
-						<img v-else src="https://cdn-icons-png.flaticon.com/512/565/565665.png" width="15" alt="">
+						<img v-else src="https://ensiklotari.id/_nuxt/img/logo.ee6db58.png" width="15" alt="">
 					</button>
 
 					<!-- Close Button (Mobile) -->

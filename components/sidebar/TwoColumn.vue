@@ -26,7 +26,7 @@
 				<div class="px-6 py-5 border-gray-200 flex items-center justify-between bg-white">
 					<!-- Logo -->
 					<div class="flex items-center space-x-2">
-						<img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/logo.svg "
+						<img src="https://ensiklotari.id/_nuxt/img/logo.ee6db58.png"
 							width="120" alt="Logo" class="object-contain" />
 					</div>
 
