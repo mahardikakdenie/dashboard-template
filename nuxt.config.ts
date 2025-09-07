@@ -18,6 +18,8 @@ export default defineNuxtConfig({
 			imgbbApiKey: process.env.VITE_IMGBB_API_KEY,
 			imgbbBaseUrl: process.env.VITE_IMG_BASE_URL,
 		},
+		jwtSecret: process.env.JWT_SECRET,
+		jwtExpiresIn: process.env.JWT_EXPIRES_IN,
 	},
 	i18n: {
 		locales: [
