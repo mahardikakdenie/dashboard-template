@@ -7,5 +7,9 @@
   "Status": "Status",
   "Roles": "Peran",
   "Actions": "Aksi",
-  "loading_text": "Memuat data, harap tunggu..."
+  "loading_text": "Memuat data, harap tunggu...",
+  "total_users": "Total Users",
+  "active_users": "User Aktif",
+  "inactive_users": "User Tidak Aktif",
+  "new_users": "User Baru"
 }

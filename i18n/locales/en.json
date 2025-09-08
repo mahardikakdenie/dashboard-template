@@ -7,5 +7,9 @@
   "Status": "Status",
   "Roles": "Role",
   "Actions": "Actions",
-  "loading_text": "Loading data, please wait..."
+  "loading_text": "Loading data, please wait...",
+  "total_users": "Total Users",
+  "active_users": "Active Users",
+  "inactive_users": "Inactive Users",
+  "new_users": "New Users"
 }
