@@ -3,24 +3,6 @@ import type { User, UserTable } from '~/types/user.type';
 
 const route = useRoute();
 const isLoading = ref<boolean>(false);
-const dataTables = computed(() => {
-	let datas: any[] = [];
-
-	const slug = route.params.slug;
-	if (slug.includes('user-lists')) {
-		datas = [
-			{
-				name: 'Superadmin',
-				email: 'superadmin@mail.com',
-				status: 'Active',
-				roles: 'Superadmin',
-				actions: 'Edit | Delete',
-			},
-		];
-	}
-
-	return datas;
-});
 
 const headerTables = computed(() => {
 	let datas: any[] | undefined = undefined;
