@@ -67,9 +67,9 @@
 						</div>
 						<h3
 							class="text-sm font-semibold text-gray-800 text-center">
-							Mahardika Kessuma Denie
+							{{ profile.name || 'Loading...' }}
 						</h3>
-						<p class="text-xs text-gray-500 mt-1">Author Website</p>
+						<p class="text-xs text-gray-500 mt-1">{{ profile.role ?? 'Author Website' }}</p>
 					</div>
 				</div>
 
@@ -180,6 +180,7 @@
 				<!-- Footer Area - Logout Button -->
 				<div class="flex p-4 border-t absolute bottom-0 border-gray-200 w-full">
 					<button
+						@click="logout"
 						class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-red-600 font-medium text-sm transition-all duration-200 cursor-pointer hover:shadow">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -204,8 +205,10 @@
 import { markRaw, ref } from 'vue';
 import { MenuSidebar } from '~/constants/menus';
 import type { ChildMenus, Menus } from '~/types/Menus';
+import type { User } from '~/types/user.type';
 
 const router = useRouter();
+const profile = ref<User>({} as User);
 
 // Simpan status open/close dropdown berdasarkan nama menu
 const openMenus = ref<any>({});
@@ -253,7 +256,48 @@ const onNavigate = (item: ChildMenus) => {
 	}
 };
 
-onMounted(() => {
+const logout = async () => {
+  try {
+    // Panggil endpoint logout
+    await $fetch('/api/logout', {
+      method: 'POST',
+    });
+
+    // Hapus token juga di client (jaga-jaga)
+    const token = useCookie('auth_token');
+    token.value = null;
+
+    // Redirect ke login
+    await navigateTo('/auth/login', { replace: true });
+  } catch (error) {
+    console.error('Logout gagal:', error);
+    // Tetap redirect ke login meskipun error
+    await navigateTo('/login', { replace: true });
+  }
+};
+
+const getDataProfile = async () => {
+	try {
+		const token = useCookie('auth_token');
+		
+		const profileAuth = await $fetch('/api/me', {
+			headers: {
+				Authorization: `Bearer ${token.value}`,
+			},
+		});
+
+		console.log("profileAuth.data : ", profileAuth.data);
+
+		// Convert created_at to Date object
+		const userData = { ...profileAuth.data, created_at: new Date(profileAuth.data.created_at) };
+		profile.value = userData;
+	} catch (error) {
+		console.error('Error fetching profile:', error);
+	}
+};
+
+onMounted(() => {	
+	getDataProfile();
 	const data = navItems?.value?.filter((nav) =>
 		nav?.child.some(
 			(c) =>
