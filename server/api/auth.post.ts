@@ -49,16 +49,13 @@ export default defineEventHandler(async (event) => {
 	}
 
 	// ✅ Generate JWT Token
+	console.log("config.jwtExpiresIn ||  : ", config.jwtExpiresIn);
+	
 	const token = jwt.sign(
-		{
-			id: user.id,
-			email: user.email,
-			username: user.username,
-			// jangan sertakan password!
-		},
+		user as User,
 		(config.jwtSecret! as Secret) ?? 'default_secret',
 		{
-			expiresIn: config.jwtExpiresIn || '7d', // default 7 hari
+			expiresIn: '7d',
 		}
 	);
 
@@ -68,6 +65,8 @@ export default defineEventHandler(async (event) => {
 		message: 'Login berhasil',
 		token,
 		user: {
+			...user,
+			password: undefined,
 			id: user.id,
 			name: user.name,
 			email: user.email,
