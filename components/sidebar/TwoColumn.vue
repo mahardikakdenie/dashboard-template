@@ -204,10 +204,12 @@
 <script setup lang="ts">
 import { markRaw, ref } from 'vue';
 import { MenuSidebar } from '~/constants/menus';
+import { useUserStore } from '~/store/users';
 import type { ChildMenus, Menus } from '~/types/Menus';
 import type { User } from '~/types/user.type';
 
 const router = useRouter();
+const userStore = useUserStore();
 const profile = ref<User>({} as User);
 
 // Simpan status open/close dropdown berdasarkan nama menu
@@ -291,6 +293,7 @@ const getDataProfile = async () => {
 		// Convert created_at to Date object
 		const userData = { ...profileAuth.data, created_at: new Date(profileAuth.data.created_at) };
 		profile.value = userData;
+		userStore.setAuthMe(profile.value);
 	} catch (error) {
 		console.error('Error fetching profile:', error);
 	}

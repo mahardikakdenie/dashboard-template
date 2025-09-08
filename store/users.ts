@@ -2,13 +2,17 @@
 import { defineStore } from 'pinia'
 import type { User } from '~/types/user.type';
 
-export const useCounterStore = defineStore('user-store', {
+export const useUserStore = defineStore('user-store', {
   state: () => ({
     datas: [] as User[],
+    me: {} as User,
   }),
   actions: {
-    setDatas(newDatas: User[]) {
+    setUserDatas(newDatas: User[]) {
       this.datas = newDatas;
+    },
+    setAuthMe(user: User) {
+      this.me = user;
     }
   },
 })
