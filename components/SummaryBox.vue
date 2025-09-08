@@ -29,7 +29,7 @@
 				</span>
 			</div>
 			<div class="text-slate-500 text-sm font-medium mt-1">
-				{{ summary.name }}
+				{{ $t(summary.name) }}
 			</div>
 		</div>
 	</div>

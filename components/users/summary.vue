@@ -23,28 +23,45 @@ export interface Summary {
 
 const summaries = ref<Summary[]>([
 	{
-		name: 'Total Users',
-		value: 5672,
+		name: 'total_users',
+		value: 0,
 		percentage: 20,
 		icon: markRaw(buildingIcon),
 	},
 	{
-		name: 'Active Users',
-		value: 4576,
+		name: 'active_users',
+		value: 0,
 		percentage: 20,
 		icon: markRaw(carouselVerticalIcon),
 	},
 	{
-		name: 'Non Active Users',
-		value: 3696,
+		name: 'inactive_users',
+		value: 0,
 		percentage: 20,
 		icon: markRaw(chalkboardIcon),
 	},
 	{
-		name: 'New User This Month',
-		value: 8987858,
+		name: 'new_users',
+		value: 0,
 		percentage: 40,
 		icon: markRaw(bussinesPlanIcon),
 	},
 ]);
+
+const getDataSummary = async () => {
+	try {
+		const response = await $fetch('/api/users/summaries');
+		
+		summaries.value[0].value = response.data.total ?? 0;
+		summaries.value[1].value = response.data.active ?? 0;
+		summaries.value[2].value = response.data.inactive ?? 0;
+		summaries.value[3].value = response.data.new ?? 0;
+	} catch (error) {
+		console.error('Error fetching summary data:', error);
+	}
+};
+
+onMounted(() => {
+	getDataSummary();
+});
 </script>
