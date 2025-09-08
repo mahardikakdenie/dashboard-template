@@ -7,12 +7,17 @@ definePageMeta({
 import { ref } from 'vue';
 import { useCookie } from '#imports';
 import { navigateTo } from '#imports';
+import type { User } from '~/types/user.type';
 
 // 👇 State form
 const email = ref('');
 const password = ref('');
 const loading = ref(false);
 const error = ref<string | null>(null);
+
+const {
+  login: useChangeToken,
+} = useAuth();
 
 // 👇 Fungsi login
 const login = async () => {
@@ -24,12 +29,7 @@ const login = async () => {
       success: boolean;
       message: string;
       token?: string;
-      user: {
-        email: string;
-        id: string;
-        name: string;
-        username: string;
-      };
+      user: User;
     } = await $fetch('/api/auth', {
       method: 'POST',
       body: {
@@ -42,6 +42,8 @@ const login = async () => {
       // Simpan token ke cookie
       const token = useCookie('auth_token');
       token.value = res.token ?? '';
+
+      useChangeToken(res.token ?? '', res.user);
 
       // Redirect ke dashboard
       await navigateTo('/', { replace: true });

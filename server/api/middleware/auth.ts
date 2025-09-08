@@ -2,6 +2,7 @@
 import { getHeader } from 'h3';
 import jwt from 'jsonwebtoken';
 import { createError } from 'h3';
+import { User } from '~/types/user.type';
 
 export default defineEventHandler((event) => {
   const config = useRuntimeConfig();
@@ -19,11 +20,10 @@ export default defineEventHandler((event) => {
 
   try {
     // Verifikasi token
-    const decoded = jwt.verify(token, config.jwtSecret) as {
-      id: string;
-      email: string;
-      username: string;
-    };
+    const decoded = jwt.verify(token, config.jwtSecret) as User;
+
+    console.log("decoded token:", decoded);
+    
 
     // Attach user ke context (bisa dipakai di handler)
     event.context.user = decoded;

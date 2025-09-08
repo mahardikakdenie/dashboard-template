@@ -1,10 +1,11 @@
 // composables/useAuth.ts
 import { ref, computed } from 'vue';
 import { navigateTo, useCookie } from '#imports';
+import type { User } from '~/types/user.type';
 
 export const useAuth = () => {
   const token = useCookie('auth_token'); // simpan token di cookie (lebih aman dari localStorage)
-  const user = ref<{ id: string; email: string; username: string } | null>(null);
+  const user = ref<User | null>(null);
 
   const isAuthenticated = computed(() => !!token.value);
 
