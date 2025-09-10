@@ -7,8 +7,6 @@ export default defineEventHandler(async (event): Promise<{
   message: string;
   data: User;
 }> => {
-  console.log("Fetching profile.... ", event);
-  
   await auth(event); // ← proteksi otomatis
 
   // Ambil user dari context (sudah di-decode)

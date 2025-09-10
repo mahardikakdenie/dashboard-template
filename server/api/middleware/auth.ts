@@ -21,10 +21,6 @@ export default defineEventHandler((event) => {
   try {
     // Verifikasi token
     const decoded = jwt.verify(token, config.jwtSecret) as User;
-
-    console.log("decoded token:", decoded);
-    
-
     // Attach user ke context (bisa dipakai di handler)
     event.context.user = decoded;
   } catch (err) {

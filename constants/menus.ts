@@ -107,6 +107,11 @@ export const MenuSidebar = [
 				icon: markRaw(shoppingIcon),
 				url: '/products/product-list',
 			},
+			{
+				name: 'Category',
+				icon: markRaw(shoppingIcon),
+				url: '/products/category',
+			},
 		],
 	},
 	{
