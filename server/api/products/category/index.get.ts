@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
             meta: {
                 status: true,
             },
-            data: categories,
+            data: categories?.datas,
         }
     } catch (error) {
         throw createError({statusCode: 500, message: 'Internal Server Error'});
