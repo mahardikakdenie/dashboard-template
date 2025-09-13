@@ -288,8 +288,6 @@ const getDataProfile = async () => {
 			},
 		});
 
-		console.log("profileAuth.data : ", profileAuth.data);
-
 		// Convert created_at to Date object
 		const userData = { ...profileAuth.data, created_at: new Date(profileAuth.data.created_at) };
 		profile.value = userData;

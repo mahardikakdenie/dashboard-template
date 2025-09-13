@@ -2,7 +2,7 @@
 	<div>
 		<div class="flex justify-between gap-4">
 			<div class="flex items-center">
-				<h4 class="font-bold text-xl">Welcome, Admin</h4>
+				<h4 class="font-bold text-xl">Welcome, {{ currentUser?.name }}</h4>
 			</div>
 
 			<div>
@@ -126,6 +126,7 @@ import buildingIcon from '~/components/icons/building.vue';
 import carouselVerticalIcon from '~/components/icons/carousel-vertical.vue';
 import chalkboardIcon from '~/components/icons/chalkboard.vue';
 import bussinesPlanIcon from '~/components/icons/bussines-plan.vue';
+import { useUserStore } from '~/store/users';
 
 export interface Summary {
 	name: string;
@@ -133,6 +134,10 @@ export interface Summary {
 	percentage: number;
 	icon: any;
 }
+
+const userStore = useUserStore();
+
+const currentUser =  computed(() => userStore.me);
 
 const summaries = ref<Summary[]>([
 	{
