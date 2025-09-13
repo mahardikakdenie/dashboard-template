@@ -1,29 +1,36 @@
 <script lang="ts" setup>
+import type { TableColumn } from '~/components/ui/Table.vue';
 import usePostHook from '~/hooks/themes/pos/pos.hooks';
 import type { ThemeResult, ThemeSummaryResp } from '~/types/themes.types';
 
-const headers = [
+const headers = reactive<TableColumn[]>([
 	{
-		name: 'Name Theme',
-		key: 'name_theme',
+		label: 'Name Theme',
+		key: 'themes.name',
+		type: 'text',
 	},
 	{
-		name: 'Status',
+		label: 'Status',
 		key: 'status',
+		type: 'text',
 	},
 	{
-		name: 'Author',
+		label: 'Author',
 		key: 'author',
+		type: 'text',
 	},
 	{
-		name: 'Created At',
+		label: 'Created At',
 		key: 'created_at',
+		type: 'text',
 	},
 	{
-		name: 'Actions',
+		label: 'Actions',
 		key: 'actions',
+		type: 'actions',
+		align: "center"
 	},
-];
+]);
 
 const { tabs, currentTabs } = usePostHook();
 

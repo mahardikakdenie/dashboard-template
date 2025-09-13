@@ -1,78 +1,116 @@
 <script lang="ts" setup>
 import type { User, UserTable } from '~/types/user.type';
+import type { TableColumn } from '../ui/Table.vue';
 
 const route = useRoute();
 const isLoading = ref<boolean>(false);
 
-const headerTables = computed(() => {
-	let datas: any[] | undefined = undefined;
+// --- Default headers ---
+const defaultHeaders: TableColumn[] = [
+  {
+    key: 'name',
+    label: 'Name',
+    type: 'text',
+  },
+  {
+    key: 'email',
+    label: 'Email',
+    type: 'text',
+  },
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'status',
+  },
+  {
+    key: 'role',
+    label: 'Role',
+    type: 'text',
+  },
+  {
+    key: 'actions',
+    label: 'Actions',
+    type: 'actions',
+  },
+];
 
-	const slug = route.params.slug;
+// --- Tentukan headers berdasarkan slug ---
+const headerTables = computed<TableColumn[]>(() => {
+  const slug = Array.isArray(route.params.slug) ? route.params.slug[0] : (route.params.slug as string);
 
-	if (slug.includes('user-lists')) {
-		datas = [
-			{
-				name: 'Name',
-				key: 'name',
-			},
-			{
-				name: 'Email',
-				key: 'email',
-			},
-			{
-				name: 'Status',
-				key: 'status',
-			},
-			{
-				name: 'Roles',
-				key: 'roles',
-			},
-			{
-				name: 'Actions',
-				key: 'actions',
-			},
-		];
-	}
+  if (typeof slug === 'string' && slug.includes('user-lists')) {
+    return defaultHeaders;
+  }
 
-	return datas;
+  // Return default jika slug tidak cocok
+  return defaultHeaders;
 });
 
+// --- Data ---
 const datas = ref<UserTable[]>([]);
 
+// --- Fetch Users ---
 const getDataUsers = async () => {
-	isLoading.value = true;
-	try {
-		const fetchedUsers = await $fetch('/api/users');
-		isLoading.value = false;
+  isLoading.value = true;
+  try {
+    const response = await $fetch<{ data: User[] }>('/api/users');
 
-		datas.value = (fetchedUsers.data ?? []).map((user) => ({
-			name: user.name ?? '-',
-			email: user.email ?? '-',
-			status: user.status ?? 'inactive',
-			role: user.role ?? 'superadmin',
-			actions: null,
-		}));
-	} catch (error) {
-		isLoading.value = false;
-	}
+    datas.value = (response.data ?? []).map((user) => ({
+      id: user.id,
+      name: user.name ?? '-',
+      email: user.email ?? '-',
+      status: user.status ?? 'inactive',
+      role:  user.role || 'superadmin', // Asumsi role bisa objek atau string
+    }));
+  } catch (error) {
+    console.error('Failed to fetch users:', error);
+    datas.value = [];
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 onMounted(() => {
-	getDataUsers();
+  getDataUsers();
 });
+
+// --- Handler aksi ---
+const handleDelete = (user: UserTable) => {
+  if (confirm(`Hapus user ${user.name}?`)) {
+    console.log('Deleting user:', user);
+    // TODO: Panggil API delete
+  }
+};
+
+const handleUpdate = (user: UserTable) => {
+  console.log('Edit user:', user);
+  // TODO: Buka modal edit
+};
 </script>
 
 <template>
-	<div>
-		<UsersSummary />
+  <div>
+    <!-- Ringkasan User -->
+    <UsersSummary />
 
-		<div class="mt-4">
-			<div class="bg-white shadow p-4 rounded-md">
-				<UiTable
-					:headers="headerTables"
-					:datas="datas ?? []"
-					:is-loading="isLoading" />
-			</div>
-		</div>
-	</div>
+    <!-- Tabel Utama -->
+    <div class="mt-4">
+      <div class="bg-white shadow p-4 rounded-md">
+        <UiTable
+          :headers="headerTables"
+          :datas="datas"
+          :is-loading="isLoading"
+          @delete="handleDelete"
+          @update="handleUpdate"
+        >
+          <!-- Opsional: custom rendering -->
+          <template #cell(role)="{ value }">
+            <span class="px-2 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-medium">
+              {{ value }}
+            </span>
+          </template>
+        </UiTable>
+      </div>
+    </div>
+  </div>
 </template>

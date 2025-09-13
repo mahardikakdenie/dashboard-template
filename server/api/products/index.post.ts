@@ -56,11 +56,13 @@ export default defineEventHandler(async (event) => {
 
     const productData = masterDatas.find(item => item.name === 'products' );
 
-    productData?.datas?.push({
+    const newProduct = {
         id: crypto.randomUUID(),
         created_at: new Date(),
         ...result.data,
-    });
+    }
+
+    productData?.datas?.push(newProduct);
 
     // if (productData) {
     //     productData.datas = [];
@@ -79,6 +81,6 @@ export default defineEventHandler(async (event) => {
             status: 201,
             message: 'Product created successfully',
         },
-        data: productData ?? [],
+        data: newProduct,
     };
 });

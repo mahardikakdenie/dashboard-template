@@ -1,342 +1,292 @@
 <script lang="ts" setup>
+import { ref, computed } from 'vue';
 import dayjs from 'dayjs';
 
-interface Header {
-	name: string;
-	key: string;
+// Interface untuk header
+export interface TableColumn {
+  key: string;
+  label: string;
+  type?: 'text' | 'date' | 'status' | 'image' | 'custom' | 'actions';
+  format?: string; // format tanggal
+  align?: 'left' | 'center' | 'right';
+  sortable?: boolean;
+  render?: (value: any, row: any) => string; // fungsi render opsional
+}
+
+interface TableData {
+  [key: string]: any;
 }
 
 const props = withDefaults(
-	defineProps<{
-		headers?: Header[];
-		datas?: any[];
-		showTitle?: boolean;
-		isLoading?: boolean;
-	}>(),
-	{
-		headers: () => [
-			{
-				name: 'Company Name',
-				key: 'name',
-			},
-			{
-				name: 'Email',
-				key: 'email',
-			},
-			{
-				name: 'Account URL',
-				key: 'url',
-			},
-			{
-				name: 'Status',
-				key: 'status',
-			},
-			{
-				name: 'Actions',
-				key: 'actions',
-			},
-		],
-		showTitle: true,
-		isLoading: true,
-	}
+  defineProps<{
+    headers?: TableColumn[];
+    datas?: TableData[];
+    showTitle?: boolean;
+    isLoading?: boolean;
+    itemsPerPage?: number;
+  }>(),
+  {
+    headers: () => [
+      { key: 'name', label: 'Company Name', type: 'text' },
+      { key: 'email', label: 'Email', type: 'text' },
+      { key: 'url', label: 'Account URL', type: 'text' },
+      { key: 'status', label: 'Status', type: 'status' },
+      { key: 'actions', label: 'Actions', type: 'actions' },
+    ],
+    datas: () => [],
+    showTitle: true,
+    isLoading: false,
+    itemsPerPage: 5,
+  }
 );
+
+const emit = defineEmits(['open-modal-create', 'delete', 'update', 'sort']);
 
 const currentPage = ref(1);
-const itemsPerPage = 5;
+const localItemsPerPage = computed(() => props.itemsPerPage);
 
-// count data for current page
+// Ambil data terpaginasi
 const paginatedData = computed(() => {
-	const start = (currentPage.value - 1) * itemsPerPage;
-	const end = start + itemsPerPage;
-	return props?.datas?.slice(start, end);
+  const start = (currentPage.value - 1) * localItemsPerPage.value;
+  const end = start + localItemsPerPage.value;
+  return props.datas.slice(start, end);
 });
 
-// show max 5 button page
+// Total halaman
+const totalPages = computed(() => Math.ceil((props.datas.length || 0) / localItemsPerPage.value));
+
+// Generate tombol pagination (max 5 tombol)
 const pages = computed(() => {
-	const total = totalPages.value;
-	const current = currentPage.value;
-	const range = [];
+  const total = totalPages.value;
+  const current = currentPage.value;
+  const range = [];
 
-	if (total <= 5) {
-		for (let i = 1; i <= total; i++) range.push(i);
-	} else {
-		if (current <= 3) {
-			for (let i = 1; i <= 5; i++) range.push(i);
-			range.push('...');
-		} else if (current >= total - 2) {
-			range.push('...');
-			for (let i = total - 4; i <= total; i++) range.push(i);
-		} else {
-			range.push('...');
-			for (let i = current - 1; i <= current + 1; i++) range.push(i);
-			range.push('...');
-		}
-	}
+  if (total <= 5) {
+    for (let i = 1; i <= total; i++) range.push(i);
+  } else {
+    if (current <= 3) {
+      range.push(1, 2, 3, 4, 5, '...');
+    } else if (current >= total - 2) {
+      range.push('...', total - 4, total - 3, total - 2, total - 1, total);
+    } else {
+      range.push('...', current - 1, current, current + 1, '...');
+    }
+  }
 
-	return range;
+  return range;
 });
 
-function goToPage(page: any) {
-	if (typeof page === 'number') currentPage.value = page;
+function goToPage(page: number | string) {
+  if (typeof page === 'number') currentPage.value = page;
 }
 
-// Total pages
-const totalPages = computed(() =>
-	Math.ceil((props?.datas?.length || 0) / itemsPerPage)
-);
-
-// Navigation Page
-const prevPage = () => {
-	if (currentPage.value > 1) currentPage.value--;
+function prevPage() {
+  if (currentPage.value > 1) currentPage.value--;
 }
 
-const nextPage = () => {
-	if (currentPage.value < totalPages.value) currentPage.value++;
+function nextPage() {
+  if (currentPage.value < totalPages.value) currentPage.value++;
 }
 
-// 
+// Helper: ambil nilai nested (ex: user.profile.createdAt)
+function getNestedValue(obj: any, path: string): any {
+  return path.split('.').reduce((acc, key) => acc?.[key], obj);
+}
 
-const emit = defineEmits(['open-modal-create', 'delete', 'update']);
+// Format value berdasarkan tipe kolom
+function formatValue(value: any, column: TableColumn, row: any) {
+  if (column.render) return column.render(value, row);
+
+  switch (column.type) {
+    case 'date':
+      return dayjs(value).format(column.format || 'DD MMM YYYY');
+    case 'status':
+      return value;
+    case 'image':
+      return value;
+    default:
+      return value ?? '-';
+  }
+}
 
 const openModalCreate = () => {
-	emit('open-modal-create');
+  emit('open-modal-create');
 };
 </script>
 
 <template>
-	<div>
-		<div v-if="showTitle">
-			<span class="font-bold text-slate-500 capitalize"
-				>{{ formattedCapitalize($route?.params?.slug) }} Data</span
-			>
-		</div>
-		<div class="flex justify-between my-4">
-			<div>
-				<InputFeature placeholder="Search" />
-			</div>
-			<div class="flex flex-wrap items-center gap-4">
-				<!-- Create Data Button -->
-				<button
-					:class="[
-						'flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold',
-						'transition-all duration-200',
-						'text-white bg-slate-600 border border-slate-700 rounded-md shadow-sm',
-						'hover:bg-slate-700 focus:outline-none focus:ring-2'
-					]" @click="openModalCreate">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="w-4 h-4"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M12 4v16m8-8H4" />
-					</svg>
-					Create Data
-				</button>
+  <div class="base-table">
+    <!-- Title -->
+    <div v-if="showTitle">
+      <span class="font-bold text-slate-500 capitalize">
+        {{ $route.params.slug ? formattedCapitalize($route.params.slug) : 'Data' }}
+      </span>
+    </div>
 
-				<!-- Filter Button -->
-				<button
-					class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-500 border border-slate-600 rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 transition-all duration-200">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="w-4 h-4"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707v5.172a1 1 0 01-.293.707l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 01-.293-.707v-5.172a1 1 0 00-.293-.707L3.293 5.293A1 1 0 013 4.586V4z" />
-					</svg>
-					Filter
-				</button>
-			</div>
-		</div>
-		<table class="min-w-full divide-y divide-gray-200 rounded-xl shadow">
-			<thead class="bg-gray-50">
-				<tr>
-					<th>
-						<BaseCheckbox :checked="false" />
-					</th>
-					<th
-						v-for="thead in headers"
-						:key="thead.key"
-						scope="col"
-						class="px-6 py-3 text-left text-xs font-bold text-slate-500 capitalize tracking-wider">
-						{{ $t(thead.name) }}
-					</th>
-				</tr>
-			</thead>
+    <!-- Search & Actions -->
+    <div class="flex justify-between my-4">
+      <div>
+        <slot name="search">
+          <InputFeature placeholder="Search..." />
+        </slot>
+      </div>
+      <div class="flex flex-wrap items-center gap-4">
+        <!-- Create Button -->
+        <button
+          class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-600 border border-slate-700 rounded-md shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 transition-all duration-200"
+          @click="openModalCreate"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Create Data
+        </button>
 
-			<tbody class="bg-white divide-y divide-gray-200">
-				<!-- Loading State -->
-				<tr v-if="isLoading">
-					<td
-						:colspan="headers.length + 1"
-						class="px-6 py-10 text-center">
-						<div
-							class="flex flex-col items-center justify-center space-y-3">
-							<img
-								src="/loading-gif.gif"
-								alt="Loading..."
-								class="w-40 h-40" />
-							<p class="text-sm text-slate-500">
-								{{ $t("loading_text") }}
-							</p>
-						</div>
-					</td>
-				</tr>
+        <!-- Filter Button -->
+        <button
+          class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-500 border border-slate-600 rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 transition-all duration-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707v5.172a1 1 0 01-.293.707l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 01-.293-.707v-5.172a1 1 0 00-.293-.707L3.293 5.293A1 1 0 013 4.586V4z" />
+          </svg>
+          Filter
+        </button>
+      </div>
+    </div>
 
-				<template v-else>
-					<tr
-						v-for="(data, index) in paginatedData"
-						:key="index"
-						class="hover:bg-gray-50 transition-colors duration-200">
-						<td class="px-6 py-4">
-							<BaseCheckbox :checked="false" />
-						</td>
-						<td
-							v-for="([key, value], idx) in Object.entries(data)"
-							:key="key"
-							class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-							<div
-								v-if="key === 'actions'"
-								class="flex items-center space-x-2">
-								<button
-									class="text-red-500 hover:text-red-700 cursor-pointer"
-									@click="$emit('delete', data)">
-									<IconsTrash class="w-5 h-5" />
-								</button>
-								<button
-									class="text-blue-500 hover:text-blue-700 cursor-pointer"
-									@click="$emit('update', data)">
-									<IconsUpdate class="w-5 h-5" />
-								</button>
-							</div>
+    <!-- Table -->
+    <table class="min-w-full divide-y divide-gray-200 rounded-xl shadow">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <BaseCheckbox :checked="false" />
+          </th>
+          <th
+            v-for="col in headers"
+            :key="col.key"
+            :class="[
+              'px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider',
+              col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'
+            ]"
+          >
+            {{ $t(col.label) }}
+          </th>
+        </tr>
+      </thead>
 
-							<div
-								v-else-if="key === 'themes'"
-								class="flex items-center">
-								<img
-									:src="data.themes.image"
-									width="100"
-									height="80"
-									class="object-contain rounded-lg border border-slate-200 mr-4"
-									alt="Theme Preview" />
-								<div>
-									<h3
-										class="text-sm font-semibold text-slate-800">
-										{{ data.themes.name }}
-									</h3>
-									<p class="text-xs text-slate-500">
-										🎨 Tema yang digunakan
-									</p>
-								</div>
-							</div>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <!-- Loading State -->
+        <tr v-if="isLoading">
+          <td :colspan="headers.length + 1" class="px-6 py-10 text-center">
+            <div class="flex flex-col items-center justify-center space-y-3">
+              <img src="/loading-gif.gif" alt="Loading..." class="w-40 h-40" />
+              <p class="text-sm text-slate-500">{{ $t("loading_text") }}</p>
+            </div>
+          </td>
+        </tr>
 
-							<div v-else-if="key === 'created_at'">
-								{{
-									dayjs(data.themes.created_at).format(
-										'DD MMMM YYYY'
-									)
-								}}
-							</div>
+        <!-- Data Rows -->
+        <template v-else>
+          <tr
+            v-for="(row, index) in paginatedData"
+            :key="index"
+            class="hover:bg-gray-50 transition-colors duration-200"
+          >
+            <td class="px-6 py-4">
+              <BaseCheckbox :checked="false" />
+            </td>
+            <td
+              v-for="col in headers"
+              :key="col.key"
+              :class="[
+                'px-6 py-4 whitespace-nowrap text-sm text-gray-900',
+                col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'
+              ]"
+            >
+              <!-- Slot kustom untuk kolom tertentu -->
+              <slot :name="`cell(${col.key})`" :value="getNestedValue(row, col.key)" :row="row">
+                <!-- Default rendering -->
+                <div v-if="col.type === 'actions'" class="flex items-center justify-center space-x-2">
+                  <button @click="$emit('delete', row)" class="text-red-500 hover:text-red-700">
+                    <IconsTrash class="w-5 h-5" />
+                  </button>
+                  <button @click="$emit('update', row)" class="text-blue-500 hover:text-blue-700">
+                    <IconsUpdate class="w-5 h-5" />
+                  </button>
+                </div>
 
-							<span
-								v-else-if="key === 'status'"
-								class="px-2 py-1 rounded-full text-xs font-semibold capitalize"
-								:class="{
-									'bg-green-100 text-green-800':
-										value === 'Active',
-									'bg-red-100 text-red-800':
-										value === 'Inactive' || value === 'inactive',
-									'bg-yellow-100 text-yellow-800':
-										value === 'pending',
-								}">
-								{{ value }}
-							</span>
+                <div v-else-if="col.type === 'image' && getNestedValue(row, col.key)">
+                  <img
+                    :src="getNestedValue(row, col.key)"
+                    :alt="col.label"
+                    class="w-16 h-12 object-cover rounded border"
+                  />
+                </div>
 
-							<span v-else>{{ value }}</span>
-						</td>
-					</tr>
+                <span
+                  v-else-if="col.type === 'status'"
+                  class="px-2 py-1 rounded-full text-xs font-semibold capitalize"
+                  :class="{
+                    'bg-green-100 text-green-800': ['active', 'Active', 'available'].includes(getNestedValue(row, col.key)),
+                    'bg-red-100 text-red-800': ['inactive', 'Inactive'].includes(getNestedValue(row, col.key)),
+                    'bg-yellow-100 text-yellow-800': ['pending'].includes(getNestedValue(row, col.key)?.toLowerCase())
+                  }"
+                >
+                  {{ formatValue(getNestedValue(row, col.key), col, row) }}
+                </span>
 
-					<!-- Tidak Ada Data -->
-					<tr v-if="paginatedData && paginatedData.length === 0">
-						<td
-							:colspan="headers.length + 1"
-							class="py-10 text-center space-y-3">
-							<div class="flex justify-center">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									class="h-10 w-10 text-slate-400"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke="currentColor">
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-								</svg>
-							</div>
-							<p class="text-lg font-semibold text-slate-700">
-								Data tidak tersedia
-							</p>
-							<p class="text-sm text-slate-500">
-								Silakan tambahkan data atau coba ubah filter
-								pencarian.
-							</p>
-						</td>
-					</tr>
-				</template>
-			</tbody>
-		</table>
+                <span v-else>{{ formatValue(getNestedValue(row, col.key), col, row) }}</span>
+              </slot>
+            </td>
+          </tr>
 
-		<!-- Pagination -->
-		<div class="flex items-center justify-end gap-4 mt-6">
-			<!-- Tombol Previous -->
-			<button
-				@click="prevPage"
-				:disabled="currentPage === 1"
-				class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition">
-				Previous
-			</button>
+          <!-- Empty State -->
+          <tr v-if="!isLoading && (!datas || datas.length === 0)">
+            <td :colspan="headers.length + 1" class="py-10 text-center space-y-3">
+              <div class="flex justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <p class="text-lg font-semibold text-slate-700">Data tidak tersedia</p>
+              <p class="text-sm text-slate-500">Silakan tambahkan data atau coba ubah filter pencarian.</p>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
 
-			<!-- List Halaman -->
-			<div v-if="pages.length > 0" class="flex space-x-1">
-				<button
-					v-for="page in pages"
-					:key="page"
-					@click="goToPage(page)"
-					:class="[
-						'px-3 py-1 rounded-md text-sm font-medium transition',
-						currentPage === page
-							? 'bg-blue-600 text-white'
-							: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
-					]">
-					{{ page || 0 }}
-				</button>
-			</div>
+    <!-- Pagination -->
+    <div v-if="!isLoading && datas.length > 0" class="flex items-center justify-end gap-4 mt-6">
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
+      >
+        Previous
+      </button>
 
-			<div v-else>
-				<span
-					class="px-3 py-1 rounded-md text-sm font-medium transition">
-					0
-				</span>
-			</div>
+      <div class="flex space-x-1">
+        <button
+          v-for="page in pages"
+          :key="page"
+          @click="goToPage(page)"
+          :class="[
+            'px-3 py-1 rounded-md text-sm font-medium transition',
+            currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          ]"
+        >
+          {{ page }}
+        </button>
+      </div>
 
-			<!-- Tombol Next -->
-			<button
-				@click="nextPage"
-				:disabled="currentPage === totalPages"
-				class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition">
-				Next
-			</button>
-		</div>
-	</div>
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
+      >
+        Next
+      </button>
+    </div>
+  </div>
 </template>
