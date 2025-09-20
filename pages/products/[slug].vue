@@ -11,8 +11,8 @@ const isProductListPage = computed(() => route.params.slug === 'product-list');
 </script>
 <template>
 	<div>
-		<users-summary />
-		<div class="mt-4 bg-white shadow p-4 rounded-2xl">
+		<div class="">
+			<users-summary />
 			<products-lists />
 		</div>
 	</div>
