@@ -274,17 +274,24 @@ const logout = async () => {
   } catch (error) {
     console.error('Logout gagal:', error);
     // Tetap redirect ke login meskipun error
-    await navigateTo('/login', { replace: true });
+    // await navigateTo('/login', { replace: true });
   }
 };
 
 const getDataProfile = async () => {
 	try {
-		const token = useCookie('auth_token');
+		// const token = useCookie('auth_token');
+
+		const {token} = useAuth();
+
+		if (!token.value) {
+			navigateTo('/auth/login', {replace: true});
+		}
+		
 		
 		const profileAuth = await $fetch('/api/me', {
 			headers: {
-				Authorization: `Bearer ${token.value}`,
+				Authorization: `Bearer ${token.value ?? userStore.token}`,
 			},
 		});
 
@@ -294,6 +301,7 @@ const getDataProfile = async () => {
 		userStore.setAuthMe(profile.value);
 	} catch (error) {
 		console.error('Error fetching profile:', error);
+		navigateTo('/auth/login', {replace: true});
 	}
 };
 

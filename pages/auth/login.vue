@@ -8,6 +8,7 @@ import { ref } from 'vue';
 import { useCookie } from '#imports';
 import { navigateTo } from '#imports';
 import type { User } from '~/types/user.type';
+import { useUserStore } from '~/store/users';
 
 // 👇 State form
 const email = ref('');
@@ -18,6 +19,8 @@ const error = ref<string | null>(null);
 const {
   login: useChangeToken,
 } = useAuth();
+
+const authStore = useUserStore();
 
 // 👇 Fungsi login
 const login = async () => {
@@ -45,8 +48,14 @@ const login = async () => {
 
       useChangeToken(res.token ?? '', res.user);
 
+      console.log("token : ", res.token);
+
+      authStore.setToken(res.token as string);
+      
+
       // Redirect ke dashboard
       await navigateTo('/', { replace: true });
+      // window.location.href = '/';
     } else {
       error.value = res.message || 'Login gagal';
     }

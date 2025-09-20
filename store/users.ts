@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user-store', {
   state: () => ({
     datas: [] as User[],
     me: {} as User,
+    token: '' as string,
   }),
   actions: {
     setUserDatas(newDatas: User[]) {
@@ -13,6 +14,9 @@ export const useUserStore = defineStore('user-store', {
     },
     setAuthMe(user: User) {
       this.me = user;
+    },
+    setToken(token: string) {
+      this.token = token;
     }
   },
 })
