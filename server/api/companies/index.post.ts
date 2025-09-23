@@ -53,6 +53,7 @@ export default defineEventHandler(async (event) => {
 		const newCompany = {
 			id: crypto.randomUUID(),
 			created_at: new Date().toISOString(),
+			default_domain_tenant: `https://${result.data.name.split(' ').join("-").toLowerCase()}.mahardikakdenie.my.id`,
 			...result.data,
 		};
 
