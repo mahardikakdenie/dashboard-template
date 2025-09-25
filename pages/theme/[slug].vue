@@ -6,6 +6,9 @@
     </div>
 </template>
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'auth' // ← nama file tanpa ekstensi: 'auth'
+});
 const route = useRoute();
 
 const isPostThemePage = computed(() => route.params.slug === 'pos-theme');

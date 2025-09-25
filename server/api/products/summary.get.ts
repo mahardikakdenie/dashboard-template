@@ -2,6 +2,7 @@
 import { CommonResponse } from '~/types/common.types';
 import auth from '../middleware/auth';
 import { Product } from '~/types/product.types';
+
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
     const masterEndpoint = 'products';
@@ -32,6 +33,23 @@ export default defineEventHandler(async (event) => {
             meta: {},
             data: {
                 all: product.datas.length,
+                active: product.datas.filter(
+					(product: Product) => product.status === 'available'
+				).length,
+				inactive: product.datas.filter(
+					(product: Product) => product.status === 'unavailable' || !product.status
+				).length,
+				new: product.datas.filter((product: Product) => {
+					const createdAt = new Date(product.created_at as Date);
+					const now = new Date();
+					const diffTime = Math.abs(
+						now.getTime() - createdAt.getTime()
+					);
+					const diffDays = Math.ceil(
+						diffTime / (1000 * 60 * 60 * 24)
+					);
+					return diffDays <= 30; // Users created in the last 30 days
+				}).length,
             }
         }
     } catch (error) {
