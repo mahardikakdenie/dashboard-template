@@ -97,7 +97,7 @@ const formattedCapitalize = (str: string | string[]) => {
       :is-loading="isLoading"
       @delete="handleDelete"
       @update="handleUpdate"
-      @open-modal-create="$emit('open-modal-create')"
+      @open-modal-create="$router.push('/products/create')"
     >
       <!-- Opsional: Custom rendering jika ingin override sel tertentu -->
 

@@ -6,7 +6,6 @@ export type ProductResponse = {
         status: number;
 
     };
-    user: User;
     data: Product[];
 };
 

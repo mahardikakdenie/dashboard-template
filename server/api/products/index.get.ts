@@ -28,7 +28,6 @@ export default defineEventHandler(async (event): Promise<ProductResponse> => {
 			meta: {
 				status: 200,
 			},
-            user,
 			data: product?.datas ?? [],
 		};
 	} catch (error) {
