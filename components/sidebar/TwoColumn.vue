@@ -67,9 +67,9 @@
 						</div>
 						<h3
 							class="text-sm font-semibold text-gray-800 text-center">
-							{{ profile.name || 'Loading...' }}
+							{{ profile?.name || 'Loading...' }}
 						</h3>
-						<p class="text-xs text-gray-500 mt-1">{{ profile.role ?? 'Author Website' }}</p>
+						<p class="text-xs text-gray-500 mt-1">{{ profile?.role.name ?? 'Author Website' }}</p>
 					</div>
 				</div>
 
@@ -210,7 +210,7 @@ import type { User } from '~/types/user.type';
 
 const router = useRouter();
 const userStore = useUserStore();
-const profile = ref<User>({} as User);
+const profile = ref<any>();
 
 // Simpan status open/close dropdown berdasarkan nama menu
 const openMenus = ref<any>({});
@@ -287,9 +287,9 @@ const getDataProfile = async () => {
 
 		// const {token} = useAuth();
 
-		// if (!token.value) {
-		// 	navigateTo('/auth/login', {replace: true});
-		// }
+		if (!token.value) {
+			navigateTo('/auth/login', {replace: true});
+		}
 		
 		
 		const profileAuth = await $fetch('/api/me', {
@@ -304,7 +304,7 @@ const getDataProfile = async () => {
 		userStore.setAuthMe(profile.value);
 	} catch (error) {
 		console.error('Error fetching profile:', error);
-		// navigateTo('/auth/login', {replace: true});
+		navigateTo('/auth/login', {replace: true});
 	}
 };
 

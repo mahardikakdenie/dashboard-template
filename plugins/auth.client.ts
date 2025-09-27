@@ -22,9 +22,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
           },
         });
 
-        if (user.value) {
-          authStore.setUserDatas(user.value);
-        }
+        // if (user.value) {
+        //   authStore.setUserDatas(user);
+        // }
       } catch (error) {
         // Token mungkin invalid → logout
         tokenCookie.value = null;

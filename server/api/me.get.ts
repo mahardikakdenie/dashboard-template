@@ -1,6 +1,8 @@
 // server/api/profile.get.ts
 import { User } from '~/types/user.type';
 import auth from './middleware/auth';
+import { CommonResponse } from '~/types/common.types';
+import { Company } from '~/types/company.types';
 
 // const jawaban_responden = [
 // 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -122,16 +124,45 @@ export default defineEventHandler(
 		message: string;
 		data: User;
 	}> => {
+		const config = useRuntimeConfig();
+		const table = 'users';
+		const endpoint = `${config.public.apiBaseUrl}`;
 		await auth(event); // ← proteksi otomatis
 
-		// Ambil user dari context (sudah di-decode)
+		try {
+			// Ambil user dari context (sudah di-decode)
 		const user = event.context.user;
+		const response = await $fetch<CommonResponse<User[]>[]>(endpoint);
 
+		const users = response.find(res => res.name === table);
+		const role = response.find(res => res.name === 'roles');
+		const companies = response.find(res => res.name === 'companies');
+		
+		
+		const currentUser = users?.datas.find(curr => curr.id === user.id);
+
+
+		console.log("roles", role?.datas);
+
+		const curr = users?.datas.map(curr => {
+			const currRole = role?.datas.find(currRole => currRole.id === curr.roleId);
+			const currCompany = companies?.datas.find((currComp: Company) => currComp.id === curr?.companyId) ?? null;
+
+			return {
+				...curr,
+				role: currRole ?? role?.datas.find(r => r.name === "superadmin"),
+				company: currCompany,
+			}
+		}).find(curr => curr.id === user.id);
+		
 		return {
 			success: true,
 			message: `success`,
-			data: user,
+			data: curr as User,
 			// ans:
 		};
+		} catch (error) {
+			throw createError({statusCode: 500})
+		}
 	}
 );

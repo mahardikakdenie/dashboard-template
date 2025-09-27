@@ -28,4 +28,5 @@ export type Product = {
     highlights?: string[];
     relatedProducts?: string[];
     companyId?: string;
+    company?: Company;
 }

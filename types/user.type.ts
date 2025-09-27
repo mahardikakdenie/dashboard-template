@@ -1,4 +1,15 @@
+import type { Company } from "./company.types";
+
 export type UserType = 'active' | 'inactive' | 'pending';
+
+export type Role = {
+    id: string;
+    name: String;
+    created_at: string;
+    created_by: string;
+    description: string;
+}
+
 export type User = {
     id: string;
     name: string;
@@ -8,10 +19,11 @@ export type User = {
     created_at: Date;
     avatar: string;
     password?: string;
-    role?: string;
+    roleId: String;
+    role?: Role;
     plan?: string;
-    company?: string;
-    companyId: number;
+    company?: Company;
+    companyId?: string;
     country?: string;
     contact?: string;
     currentPlan?: string;

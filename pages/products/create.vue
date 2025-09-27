@@ -474,6 +474,7 @@ onMounted(() => {
 				<select
 					v-model="formData.companyId"
 					class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+					<option value="" disabled>Select Company</option>
 					<option
 						v-for="(company, i) in companies"
 						:key="i"

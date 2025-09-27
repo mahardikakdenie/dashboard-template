@@ -108,6 +108,11 @@ export const MenuSidebar = [
 				url: '/products/product-list',
 			},
 			{
+				name: 'Create Products',
+				icon: markRaw(shoppingIcon),
+				url: '/products/create',
+			},
+			{
 				name: 'Category',
 				icon: markRaw(shoppingIcon),
 				url: '/products/category',
