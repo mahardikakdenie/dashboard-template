@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n'; // Jika pakai vue-i18n
 import { z } from 'zod';
+import type { Option } from '~/types/option.types';
 
 const token = useCookie('auth_token');
 
@@ -147,9 +148,25 @@ const getDataCompany = async () => {
 			}
 		);
 
-		console.log('response : ', response);
-
 		companies.value = response?.data;
+	} catch (error) {
+		console.log('error : ', error);
+	}
+};
+
+const productCategories = ref<Option[]>([]);
+const getDataProductCategory = async () => {
+    try {
+		const response = await $fetch<Option[]>(
+			'/api/products/category/select',
+			{
+				headers: {
+					Authorization: `Bearer ${token.value}`,
+				},
+			}
+		);
+
+		productCategories.value = response;
 	} catch (error) {
 		console.log('error : ', error);
 	}
@@ -157,6 +174,7 @@ const getDataCompany = async () => {
 
 onMounted(() => {
 	getDataCompany();
+    getDataProductCategory();
 });
 </script>
 
@@ -271,17 +289,22 @@ onMounted(() => {
 				</div>
 			</div>
 			<!-- Category -->
-			<div>
+<div>
 				<label class="block text-sm font-medium text-gray-700 mb-1">
 					{{ $t('category') }}
 				</label>
-				<input
+				<select
 					v-model="formData.category"
-					type="text"
-					class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-					:placeholder="$t('enter_category')" />
+					class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="" disabled>Product Category Select</option>
+					<option
+						v-for="(category, i) in productCategories"
+						:key="i"
+						:value="category.id">
+						{{ category.name }}
+					</option>
+				</select>
 			</div>
-
 			<!-- Stock -->
 			<div>
 				<label class="block text-sm font-medium text-gray-700 mb-1">
@@ -448,10 +471,6 @@ onMounted(() => {
 				<label class="block text-sm font-medium text-gray-700 mb-1">
 					{{ $t('company_id') }}
 				</label>
-				<!-- <input
-					type="text"
-					class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-					:placeholder="$t('enter_company_id')" /> -->
 				<select
 					v-model="formData.companyId"
 					class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">

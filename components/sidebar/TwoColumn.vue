@@ -280,18 +280,21 @@ const logout = async () => {
 
 const getDataProfile = async () => {
 	try {
-		// const token = useCookie('auth_token');
+		const token = useCookie('auth_token');
 
-		const {token} = useAuth();
+		console.log("token : ", token.value);
+		
 
-		if (!token.value) {
-			navigateTo('/auth/login', {replace: true});
-		}
+		// const {token} = useAuth();
+
+		// if (!token.value) {
+		// 	navigateTo('/auth/login', {replace: true});
+		// }
 		
 		
 		const profileAuth = await $fetch('/api/me', {
 			headers: {
-				Authorization: `Bearer ${token.value ?? userStore.token}`,
+				Authorization: `Bearer ${userStore.token}`,
 			},
 		});
 
@@ -301,7 +304,7 @@ const getDataProfile = async () => {
 		userStore.setAuthMe(profile.value);
 	} catch (error) {
 		console.error('Error fetching profile:', error);
-		navigateTo('/auth/login', {replace: true});
+		// navigateTo('/auth/login', {replace: true});
 	}
 };
 

@@ -1,33 +1,35 @@
+import { useUserStore } from "~/store/users";
+
 // plugins/auth.client.ts
-import { ofetch } from 'ofetch';
+export default defineNuxtPlugin(async (nuxtApp) => {
+  if (process.client) {
+    const authStore = useUserStore();
+    const tokenCookie = useCookie('auth_token', {
+      maxAge: 604800,
+      sameSite: 'lax',
+      path: '/',
+    });
 
-export default defineNuxtPlugin((nuxtApp) => {
-  const token = useCookie('auth_token');
+    // Jika ada token, coba ambil data user
+    if (tokenCookie.value) {
+      authStore.setToken(tokenCookie.value);
 
-  // ✅ Extend $fetch dengan interceptor
-  nuxtApp.$fetch = ofetch.create({
-    onRequest({ options }) {
-      if (token.value) {
-        // Pastikan headers adalah plain object
-        options.headers = options.headers || {};
+      try {
+        // Ganti dengan endpoint API-mu
+        const { data: user } = await useFetch('/api/user/me', {
+          headers: {
+            Authorization: `Bearer ${tokenCookie.value}`,
+          },
+        });
 
-        // Handle jika headers adalah instance Headers
-        if (options.headers instanceof Headers) {
-          options.headers.set('Authorization', `Bearer ${token.value}`);
-        } else {
-          // Jika object biasa, assign langsung
-          (options.headers as Record<string, string>).Authorization = `Bearer ${token.value}`;
+        if (user.value) {
+          authStore.setUserDatas(user.value);
         }
+      } catch (error) {
+        // Token mungkin invalid → logout
+        tokenCookie.value = null;
+        // authStore.clearAuth();
       }
-      return options;
-    },
-
-    // ✅ Opsional: Handle response 401 → auto logout
-    onResponseError({ response }) {
-      if (response.status === 401) {
-        token.value = null;
-        navigateTo('/login', { replace: true });
-      }
-    },
-  });
+    }
+  }
 });

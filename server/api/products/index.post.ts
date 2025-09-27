@@ -1,6 +1,8 @@
 import z from 'zod';
 import { CommonResponse } from '~/types/common.types';
 import { Product } from '~/types/product.types';
+import auth from '../middleware/auth';
+import { User } from '~/types/user.type';
 
 const productSchema = z.object({
 	name: z.string().min(3),
@@ -27,6 +29,10 @@ const config = useRuntimeConfig();
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const result = productSchema.safeParse(body);
+
+    await auth(event);
+
+    const user: User = event.context.user;
 
     if (!result.success) {
         const errors: Record<string, string[]> = {};

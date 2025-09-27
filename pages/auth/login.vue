@@ -45,14 +45,14 @@ const login = async () => {
       // Simpan token ke cookie
       const token = useCookie('auth_token');
       token.value = res.token ?? '';
-
-      useChangeToken(res.token ?? '', res.user);
-
-      console.log("token : ", res.token);
-
+      
+      
+      console.log("token : ", res.user);
+      
       authStore.setToken(res.token as string);
       
-
+      
+      useChangeToken(res.token ?? authStore.token, res.user);
       // Redirect ke dashboard
       await navigateTo('/', { replace: true });
       // window.location.href = '/';
@@ -147,7 +147,7 @@ const handleSubmit = (e: Event) => {
       </div>
     </form>
 
-    <div class="mt-6 text-center">
+    <!-- <div class="mt-6 text-center">
       <p class="text-sm text-gray-600">
         Belum punya akun?
         <NuxtLink
@@ -156,6 +156,6 @@ const handleSubmit = (e: Event) => {
           >Daftar di sini</NuxtLink
         >
       </p>
-    </div>
+    </div> -->
   </div>
 </template>
