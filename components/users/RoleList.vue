@@ -28,6 +28,7 @@ const headers = ref<TableColumn[]>([
 ]);
 
 const datas = ref<Role[]>([]);
+const isLoading = ref<boolean>(true);
 const getDataRoles = async () => {
     try {
         const response = await $fetch("/api/roles", {
@@ -37,6 +38,7 @@ const getDataRoles = async () => {
         });
 
         datas.value = response.data ?? [];
+        isLoading.value = false;
         
     } catch (error) {
         console.log("error fetched role data : ", error);
@@ -54,7 +56,7 @@ onMounted(() => {
             <UsersSummary />
 
             <div class="mt-5">
-                <UiTable :headers="headers" :datas="datas" />
+                <UiTable :headers="headers" :datas="datas" :is-loading="isLoading" />
             </div>
         </div>
     </div>

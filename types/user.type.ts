@@ -1,4 +1,5 @@
 import type { Company } from "./company.types";
+import type { Menus } from "./Menus";
 
 export type UserType = 'active' | 'inactive' | 'pending';
 
@@ -8,6 +9,10 @@ export type Role = {
     created_at: string;
     created_by: string;
     description: string;
+    userCreated?: User;
+    companyId?: string;
+    company?: Company;
+    menus: Menus[];
 }
 
 export type User = {
