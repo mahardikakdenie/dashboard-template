@@ -139,6 +139,8 @@ const userStore = useUserStore();
 
 const currentUser =  computed(() => userStore.me);
 
+const token = useCookie('auth_token');
+
 const summaries = ref<Summary[]>([
 	{
 		name: 'Total Companies',
@@ -191,4 +193,34 @@ const theadCompanies = ref<{
         key: 'status',
     },
 ]);
+
+const companySummary = ref({
+	total: 0,
+	active: 0,
+	inactive: 0,
+	pending: 0,
+	new: 0,
+});
+const getDataSummary = async () => {
+	try {
+		const response: {totalCompany: number; active: number} = await $fetch("/api/companies/summary", {
+			headers: {
+				Authorization: `Bearer ${token.value}`
+			}
+		});
+
+		console.log("response : ", response);
+
+		summaries.value[0].value = response?.totalCompany ?? 0;
+		summaries.value[1].value = response?.active ?? 0;
+		
+	} catch (error) {
+		console.log("error fetch company summary : ",error);
+		
+	}
+};
+
+onMounted(() => {
+	getDataSummary();
+});
 </script>
