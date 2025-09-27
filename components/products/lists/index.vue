@@ -94,7 +94,7 @@ const formattedCapitalize = (str: string | string[]) => {
 </script>
 
 <template>
-	<div class="mt-4 bg-white shadow p-4 rounded-2xl">
+	<div class="mt-4 bg-white shadow p-4 rounded-2xl overflow-x-scroll">
 		<!-- Gunakan BaseTable / UiTable yang sudah dinamis -->
 		<UiTable
 			:headers="headers"
