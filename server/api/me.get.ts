@@ -150,6 +150,7 @@ export default defineEventHandler(
 
 			return {
 				...curr,
+				password: undefined,
 				role: currRole ?? role?.datas.find(r => r.name === "superadmin"),
 				company: currCompany,
 			}
