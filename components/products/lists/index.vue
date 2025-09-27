@@ -38,7 +38,7 @@ const headers = reactive<TableColumn[]>([
 		key: 'created_at',
 		label: 'Created At',
 		type: 'date',
-		format: 'DD MMMM YYYY', // Bisa diubah sesuai kebutuhan
+		format: 'DD MMMM YYYY',
 	},
 	{
 		key: 'actions',

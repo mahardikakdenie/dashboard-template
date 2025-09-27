@@ -10,5 +10,6 @@ const isUserListPage = computed(() => route.params.slug === 'user-lists');
 <template>
     <div>
         <UsersList v-if="isUserListPage" />
+        <UsersRoleList v-else />
     </div>
 </template>
