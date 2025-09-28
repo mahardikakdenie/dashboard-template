@@ -7,7 +7,7 @@ import type { ProductResponse } from '~/types/product.types';
 const token = useCookie('auth_token');
 const isLoading = ref<boolean>(true);
 
-// --- HEADERS: Lebih dinamis dengan tipe ---
+// --- HEADERS: more dynamic with type ---
 const headers = reactive<TableColumn[]>([
 	{
 		key: 'name',
@@ -29,11 +29,11 @@ const headers = reactive<TableColumn[]>([
 		label: 'Stock',
 		type: 'text',
 	},
-  {
-    key: 'company.name',
-    label: "Company",
-    type: "text",
-  },
+	{
+		key: 'company.name',
+		label: 'Company',
+		type: 'text',
+	},
 	{
 		key: 'created_at',
 		label: 'Created At',
