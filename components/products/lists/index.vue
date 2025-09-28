@@ -103,16 +103,11 @@ const formattedCapitalize = (str: string | string[]) => {
 			@delete="handleDelete"
 			@update="handleUpdate"
 			@open-modal-create="$router.push('/products/create')">
-			<!-- Opsional: Custom rendering jika ingin override sel tertentu -->
-
-			<!-- Contoh: Custom tampilan untuk Created At -->
 			<template #cell(created_at)="{ value }">
 				<span class="text-sm text-slate-600">
 					{{ dayjs(value).format('DD MMM YYYY • HH:mm') }}
 				</span>
 			</template>
-
-			<!-- Custom status bisa juga ditambahkan, tapi sudah otomatis di BaseTable -->
 		</UiTable>
 	</div>
 </template>
