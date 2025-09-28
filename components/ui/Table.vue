@@ -2,15 +2,15 @@
 import { ref, computed } from 'vue';
 import dayjs from 'dayjs';
 
-// Interface untuk header
+// Interface for header
 export interface TableColumn {
   key: string;
   label: string;
   type?: 'text' | 'date' | 'status' | 'image' | 'custom' | 'actions';
-  format?: string; // format tanggal
+  format?: string; // date format
   align?: 'left' | 'center' | 'right';
   sortable?: boolean;
-  render?: (value: any, row: any) => string; // fungsi render opsional
+  render?: (value: any, row: any) => string; // optional function render
 }
 
 interface TableData {
@@ -45,17 +45,17 @@ const emit = defineEmits(['open-modal-create', 'delete', 'update', 'sort']);
 const currentPage = ref(1);
 const localItemsPerPage = computed(() => props.itemsPerPage);
 
-// Ambil data terpaginasi
+// get data paginated
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * localItemsPerPage.value;
   const end = start + localItemsPerPage.value;
   return props.datas.slice(start, end);
 });
 
-// Total halaman
+// Total Pages
 const totalPages = computed(() => Math.ceil((props.datas.length || 0) / localItemsPerPage.value));
 
-// Generate tombol pagination (max 5 tombol)
+// Generate pagination Button (Max 5 button)
 const pages = computed(() => {
   const total = totalPages.value;
   const current = currentPage.value;
@@ -88,12 +88,12 @@ function nextPage() {
   if (currentPage.value < totalPages.value) currentPage.value++;
 }
 
-// Helper: ambil nilai nested (ex: user.profile.createdAt)
+//  Helpers: get value nested (ex: user.profile.createdAt)
 function getNestedValue(obj: any, path: string): any {
-  return path.split('.').reduce((acc, key) => acc?.[key], obj);
+  return path.split('.').reduce((acc, key) => acc?.[0], obj);
 }
 
-// Format value berdasarkan tipe kolom
+// Format Value accourdion column type
 function formatValue(value: any, column: TableColumn, row: any) {
   if (column.render) return column.render(value, row);
 
