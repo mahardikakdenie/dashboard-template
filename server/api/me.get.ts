@@ -1,4 +1,3 @@
-// server/api/profile.get.ts
 import { User } from '~/types/user.type';
 import auth from './middleware/auth';
 import { CommonResponse } from '~/types/common.types';
