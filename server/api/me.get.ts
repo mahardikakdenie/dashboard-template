@@ -127,43 +127,40 @@ export default defineEventHandler(
 		const config = useRuntimeConfig();
 		const table = 'users';
 		const endpoint = `${config.public.apiBaseUrl}`;
-		await auth(event); // ← proteksi otomatis
-
+		
 		try {
-			// Ambil user dari context (sudah di-decode)
-		const user = event.context.user;
-		const response = await $fetch<CommonResponse<User[]>[]>(endpoint);
+			await auth(event);
+			const payloadUser = event.context.user;
+			const response = await $fetch<CommonResponse<User[]>[]>(endpoint);
 
-		const users = response.find(res => res.name === table);
-		const role = response.find(res => res.name === 'roles');
-		const companies = response.find(res => res.name === 'companies');
-		
-		
-		const currentUser = users?.datas.find(curr => curr.id === user.id);
+			const users = response.find((res) => res.name === table);
+			const role = response.find((res) => res.name === 'roles');
+			const companies = response.find((res) => res.name === 'companies');
 
-
-		console.log("roles", role?.datas);
-
-		const curr = users?.datas.map(curr => {
-			const currRole = role?.datas.find(currRole => currRole.id === curr.roleId);
-			const currCompany = companies?.datas.find((currComp: Company) => currComp.id === curr?.companyId) ?? null;
+			const currentUser = users?.datas?.find(
+				(curr) => curr.id === payloadUser.id
+			);
+			const currRole =
+				role?.datas?.find(
+					(currRole) => currRole.id === currentUser?.roleId
+				) ?? role?.datas?.find((r) => r.name === 'superadmin');
+			const user = {
+				...currentUser,
+				role: currRole,
+				company:
+					companies?.datas?.find(
+						(currComp: Company) =>
+							currComp?.id === currentUser?.companyId
+					) ?? null,
+			};
 
 			return {
-				...curr,
-				password: undefined,
-				role: currRole ?? role?.datas.find(r => r.name === "superadmin"),
-				company: currCompany,
-			}
-		}).find(curr => curr.id === user.id);
-		
-		return {
-			success: true,
-			message: `success`,
-			data: curr as User,
-			// ans:
-		};
+				success: true,
+				message: `success`,
+				data: user as User,
+			};
 		} catch (error) {
-			throw createError({statusCode: 500})
+			throw createError({ statusCode: 500 });
 		}
 	}
 );
