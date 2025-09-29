@@ -17,6 +17,8 @@ import usersIcon from '../components/icons/users.vue';
 import lockIcon from '../components/icons/lock.vue';
 import salesIcon from '~/components/icons/sales.vue';
 import cvIcon from '~/components/icons/cv.vue';
+import CubeIcons from '~/components/icons/cube-icons.vue';
+import Squares2x2 from '~/components/icons/squares2x2.vue';
 
 export const MenuSidebar = [
 	{
@@ -109,12 +111,12 @@ export const MenuSidebar = [
 			},
 			{
 				name: 'Create Products',
-				icon: markRaw(shoppingIcon),
+				icon: markRaw(CubeIcons),
 				url: '/products/create',
 			},
 			{
 				name: 'Category',
-				icon: markRaw(shoppingIcon),
+				icon: markRaw(Squares2x2),
 				url: '/products/category',
 			},
 		],
