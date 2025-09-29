@@ -90,7 +90,7 @@ function nextPage() {
 
 //  Helpers: get value nested (ex: user.profile.createdAt)
 function getNestedValue(obj: any, path: string): any {
-  return path.split('.').reduce((acc, key) => acc?.[0], obj);
+  return path.split('.').reduce((acc, key) => acc?.[key], obj);
 }
 
 // Format Value accourdion column type
