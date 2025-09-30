@@ -1,4 +1,4 @@
-// server/api/products.get.ts (atau file handler-mu)
+// server/api/products.get.ts
 import { Product, ProductResponse } from '~/types/product.types';
 import auth from '../middleware/auth';
 import { CommonResponse } from '~/types/common.types';
@@ -6,66 +6,141 @@ import { Company } from '~/types/company.types';
 
 const config = useRuntimeConfig();
 
+// Daftar field yang diizinkan untuk sorting
+const ALLOWED_SORT_FIELDS: (keyof Product)[] = [
+  'name',
+  'price',
+  'created_at',
+  'stock',
+  'rating',
+  'category',
+  'status',
+];
+
 export default defineEventHandler(async (event): Promise<ProductResponse> => {
-	try {
-		await auth(event);
-		const user = event.context.user;
+  try {
+    await auth(event);
+    const user = event.context.user;
 
-		// ✅ Ambil query params
-		const query = getQuery(event);
-		const page = query.page ? Number(query.page) : 1;
-		const limit = query.limit ? Number(query.limit) : 10;
-		const search = typeof query.search === 'string' ? query.search : '';
+    if (!user) {
+      throw createError({
+        statusCode: 401,
+        message: 'Unauthorized: User not found in context',
+      });
+    }
 
-		console.log("page : ", page);
-		
+    // ✅ Ambil query params
+    const query = getQuery(event);
+    const page = query.page ? Number(query.page) : 1;
+    const limit = query.limit ? Number(query.limit) : 10;
+    const search = typeof query.search === 'string' ? query.search : '';
+    const sortField = typeof query.sort === 'string' ? query.sort : '';
+    const order = typeof query.order === 'string' && ['asc', 'desc'].includes(query.order) 
+      ? query.order 
+      : 'asc';
 
-		if (!user) {
-			throw createError({
-				statusCode: 401,
-				message: 'Unauthorized: User not found in context',
-			});
-		}
+    console.log("page:", page, "sort:", sortField, "order:", order);
 
-		// Ambil data master
-		const masterDatas = await $fetch<CommonResponse<any>[]>( // ✅ gunakan unknown dulu karena isinya dinamis
-			`${config.public.apiBaseUrl}`, // ❗ pastikan endpoint benar
-			{
-				method: 'GET',
-				headers: { 'Content-Type': 'application/json' },
-			}
-		);
+    // Validasi field sort
+    let validatedSortField: keyof Product | null = null;
+    if (sortField && ALLOWED_SORT_FIELDS.includes(sortField as keyof Product)) {
+      validatedSortField = sortField as keyof Product;
+    }
 
-		// Cari data products dan companies
-		const productResponse = masterDatas.find(
-			(item) => item.name === 'products'
-		) as CommonResponse<Product[]> | undefined;
-		const companyResponse = masterDatas.find(
-			(item) => item.name === 'companies'
-		) as CommonResponse<Company[]> | undefined;
+    // Ambil data master
+    const masterDatas = await $fetch<CommonResponse<any>[]>(
+      `${config.public.apiBaseUrl}`,
+      {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
 
-		const products = productResponse?.datas ?? [];
-		const companies = companyResponse?.datas ?? [];
+    const productResponse = masterDatas.find(
+      (item) => item.name === 'products'
+    ) as CommonResponse<Product[]> | undefined;
+    const companyResponse = masterDatas.find(
+      (item) => item.name === 'companies'
+    ) as CommonResponse<Company[]> | undefined;
 
-		// Gabungkan product dengan company
-		const enrichedProducts: Product[] = products.map((product) => {
-			const company =
-				companies.find((c) => c.id === product.companyId) ?? undefined;
-			return {
-				...product,
-				company,
-			};
-		});
+    const products = productResponse?.datas ?? [];
+    const companies = companyResponse?.datas ?? [];
 
-		return {
-			meta: { status: 200 },
-			data: enrichedProducts,
-		};
-	} catch (error) {
-		console.error('Error in /api/products:', error);
-		throw createError({
-			statusCode: 500,
-			message: 'Gagal mengambil data produk',
-		});
-	}
+    // Gabungkan product dengan company
+    let enrichedProducts: Product[] = products.map((product) => {
+      const company = companies.find((c) => c.id === product.companyId) ?? undefined;
+      return {
+        ...product,
+        company,
+      };
+    });
+
+    // 🔍 Filter berdasarkan search (opsional, tapi bagus ditambahkan)
+    if (search) {
+      const term = search.toLowerCase();
+      enrichedProducts = enrichedProducts.filter(
+        (p) =>
+          (p.name && p.name.toLowerCase().includes(term)) ||
+          (p.description && p.description.toLowerCase().includes(term)) ||
+          (p.category && p.category.toLowerCase().includes(term)) ||
+          (p.sku && p.sku.toLowerCase().includes(term))
+      );
+    }
+
+    // 🔁 Sorting
+    if (validatedSortField) {
+      enrichedProducts.sort((a, b) => {
+        const valA = a[validatedSortField!];
+        const valB = b[validatedSortField!];
+
+        // Handle null/undefined
+        if (valA == null && valB == null) return 0;
+        if (valA == null) return order === 'asc' ? 1 : -1;
+        if (valB == null) return order === 'asc' ? -1 : 1;
+
+        let comparison = 0;
+
+        // Handle Date
+        if (validatedSortField === 'created_at') {
+          const dateA = new Date(valA as string | number).getTime();
+          const dateB = new Date(valB as string | number).getTime();
+          comparison = dateA - dateB;
+        }
+        // Handle string
+        else if (typeof valA === 'string' && typeof valB === 'string') {
+          comparison = valA.localeCompare(valB);
+        }
+        // Handle number
+        else if (typeof valA === 'number' && typeof valB === 'number') {
+          comparison = valA - valB;
+        }
+        // Fallback: stringifikasi
+        else {
+          comparison = String(valA).localeCompare(String(valB));
+        }
+
+        return order === 'desc' ? -comparison : comparison;
+      });
+    }
+
+    // 📄 Pagination (opsional, tapi kamu sudah punya page & limit)
+    const startIndex = (page - 1) * limit;
+    const paginatedProducts = enrichedProducts.slice(startIndex, startIndex + limit);
+
+    return {
+      meta: { 
+        status: 200,
+        page,
+        limit,
+        total: enrichedProducts.length,
+      },
+      data: paginatedProducts,
+    };
+  } catch (error) {
+    console.error('Error in /api/products:', error);
+    throw createError({
+      statusCode: 500,
+      message: 'Gagal mengambil data produk',
+    });
+  }
 });

@@ -4,7 +4,9 @@ import type { User } from "./user.type";
 export type ProductResponse = {
     meta: {
         status: number;
-
+        page: number;
+        limit: number;
+        total: number;
     };
     data: Product[];
 };
