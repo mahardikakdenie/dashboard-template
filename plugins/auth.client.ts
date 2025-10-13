@@ -16,7 +16,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
       try {
         // Ganti dengan endpoint API-mu
-        const { data: user } = await useFetch('/api/user/me', {
+        const { data: user } = await useFetch('/api/users/me', {
           headers: {
             Authorization: `Bearer ${tokenCookie.value}`,
           },
