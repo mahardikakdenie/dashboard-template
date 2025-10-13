@@ -136,7 +136,7 @@ export default defineEventHandler(async (event): Promise<ProductResponse> => {
 			};
 		});
 
-		// 🔍 Filter berdasarkan search (opsional, tapi bagus ditambahkan)
+		// 🔍 Filter based on search (optional, but good for added)
 		if (search) {
 			const term = search.toLowerCase();
 			enrichedProducts = enrichedProducts.filter(
@@ -154,7 +154,7 @@ export default defineEventHandler(async (event): Promise<ProductResponse> => {
 			enrichedProducts = getProductSorted(enrichedProducts, validatedSortField, order);
 		}
 
-		// 📄 Pagination (opsional, tapi kamu sudah punya page & limit)
+		// 📄 Pagination (optional, but you have page & limit)
 		const startIndex = (page - 1) * limit;
 		const paginatedProducts = enrichedProducts.slice(
 			startIndex,
