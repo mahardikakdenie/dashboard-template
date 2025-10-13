@@ -33,7 +33,11 @@ export default defineEventHandler(
 				) ?? role?.datas?.find((r) => r.name === 'superadmin');
 			const user = {
 				...currentUser,
-				role: currRole,
+				password: undefined,
+				role: {
+					id: currRole?.id,
+					name: currRole?.name,
+				},
 				company:
 					companies?.datas?.find(
 						(currComp: Company) =>

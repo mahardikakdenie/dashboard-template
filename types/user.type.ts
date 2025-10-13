@@ -6,13 +6,13 @@ export type UserType = 'active' | 'inactive' | 'pending';
 export type Role = {
     id: string;
     name: String;
-    created_at: string;
-    created_by: string;
-    description: string;
+    created_at?: string;
+    created_by?: string;
+    description?: string;
     userCreated?: User;
     companyId?: string;
     company?: Company;
-    menus: Menus[];
+    menus?: Menus[];
 }
 
 export type User = {
