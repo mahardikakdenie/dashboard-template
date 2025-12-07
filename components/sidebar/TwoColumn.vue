@@ -58,18 +58,27 @@
 				<!-- Profile Card -->
 				<div class="px-4 mt-4">
 					<div
-						class="px-4 py-2 border border-gray-200 rounded-lg bg-white shadow-sm flex flex-col items-center">
+						class="px-5 py-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col items-center">
+						<!-- Avatar -->
 						<div class="mb-3">
 							<img
-								src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/customer/customer15.jpg "
-								alt="User Avatar"
-								class="w-16 h-16 object-cover rounded-full border-2 border-indigo-100 shadow-sm" />
+								src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/customer/customer15.jpg"
+								alt="User profile"
+								class="w-16 h-16 rounded-full object-cover border-2 border-indigo-50/30 shadow-sm transition-transform duration-200 hover:scale-105"
+								loading="lazy" />
 						</div>
-						<h3
-							class="text-sm font-semibold text-gray-800 text-center">
-							{{ profile?.name || 'Loading...' }}
-						</h3>
-						<p class="text-xs text-gray-500 mt-1">{{ profile?.role.name ?? 'Author Website' }}</p>
+
+						<!-- Email -->
+						<span
+							v-if="profile && profile.email"
+							class="text-base font-semibold text-gray-800 text-center line-clamp-1">
+							{{ (profile?.email as string)?.split('@')[0] || 'Loading...' }}
+						</span>
+
+						<!-- Role -->
+						<p class="text-sm text-gray-500 mt-1 text-center">
+							{{ profile?.role?.name || 'Website Contributor' }}
+						</p>
 					</div>
 				</div>
 
@@ -178,7 +187,8 @@
 				</nav>
 
 				<!-- Footer Area - Logout Button -->
-				<div class="flex p-4 border-t absolute bottom-0 border-gray-200 w-full">
+				<div
+					class="flex p-4 border-t absolute bottom-0 border-gray-200 w-full">
 					<button
 						@click="logout"
 						class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-red-600 font-medium text-sm transition-all duration-200 cursor-pointer hover:shadow">
@@ -259,39 +269,37 @@ const onNavigate = (item: ChildMenus) => {
 };
 
 const logout = async () => {
-  try {
-    // Panggil endpoint logout
-    await $fetch('/api/logout', {
-      method: 'POST',
-    });
+	try {
+		// Panggil endpoint logout
+		await $fetch('/api/logout', {
+			method: 'POST',
+		});
 
-    // Hapus token juga di client (jaga-jaga)
-    const token = useCookie('auth_token');
-    token.value = null;
+		// Hapus token juga di client (jaga-jaga)
+		const token = useCookie('auth_token');
+		token.value = null;
 
-    // Redirect ke login
-    await navigateTo('/auth/login', { replace: true });
-  } catch (error) {
-    console.error('Logout gagal:', error);
-    // Tetap redirect ke login meskipun error
-    // await navigateTo('/login', { replace: true });
-  }
+		// Redirect ke login
+		await navigateTo('/auth/login', { replace: true });
+	} catch (error) {
+		console.error('Logout gagal:', error);
+		// Tetap redirect ke login meskipun error
+		// await navigateTo('/login', { replace: true });
+	}
 };
 
 const getDataProfile = async () => {
 	try {
 		const token = useCookie('auth_token');
 
-		console.log("token : ", token.value);
-		
+		console.log('token : ', token.value);
 
 		// const {token} = useAuth();
 
 		if (!token.value) {
-			navigateTo('/auth/login', {replace: true});
+			navigateTo('/auth/login', { replace: true });
 		}
-		
-		
+
 		const profileAuth = await $fetch('/api/me', {
 			headers: {
 				Authorization: `Bearer ${userStore.token}`,
@@ -299,16 +307,19 @@ const getDataProfile = async () => {
 		});
 
 		// Convert created_at to Date object
-		const userData = { ...profileAuth.data, created_at: new Date(profileAuth.data.created_at) };
+		const userData = {
+			...profileAuth.data,
+			created_at: new Date(profileAuth?.data.created_at as string),
+		};
 		profile.value = userData;
 		userStore.setAuthMe(profile.value);
 	} catch (error) {
 		console.error('Error fetching profile:', error);
-		navigateTo('/auth/login', {replace: true});
+		navigateTo('/auth/login', { replace: true });
 	}
 };
 
-onMounted(() => {	
+onMounted(() => {
 	getDataProfile();
 	const data = navItems?.value?.filter((nav) =>
 		nav?.child.some(
