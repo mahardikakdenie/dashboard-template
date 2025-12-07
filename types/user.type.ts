@@ -17,14 +17,14 @@ export type Role = {
 
 export type User = {
     id: string;
-    name: string;
-    username: string;
-    email: string;
-    status: UserType;
-    created_at: Date;
-    avatar: string;
+    name?: string;
+    username?: string;
+    email?: string;
+    status?: UserType;
+    created_at?: Date;
+    avatar?: string;
     password?: string;
-    roleId: String;
+    roleId?: String;
     role?: Role;
     plan?: string;
     company?: Company;
