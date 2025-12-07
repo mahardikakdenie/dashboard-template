@@ -1,7 +1,6 @@
 <template>
 	<aside class="h-full bg-white shadow-md">
 		<div class="grid grid-cols-4 h-full">
-			<!-- Sidebar Navigation - border-r border-gray-200  -->
 			<div class="px-1 py-2 shadow">
 				<nav class="space-y-1">
 					<TransitionGroup name="slide-fade">
@@ -23,12 +22,9 @@
 				</nav>
 			</div>
 
-			<!-- Main Header Area -->
 			<div class="col-span-3 bg-gray-50 relative">
-				<!-- Top Header -->
 				<div
 					class="px-6 py-5 border-gray-200 flex items-center justify-between bg-white">
-					<!-- Logo -->
 					<div class="flex items-center space-x-2">
 						<img
 							src="https://ensiklotari.id/_nuxt/img/logo.ee6db58.png"
@@ -37,7 +33,6 @@
 							class="object-contain" />
 					</div>
 
-					<!-- Mobile Close Button -->
 					<button
 						@click="toggleSidebar"
 						class="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 focus:outline-none">
@@ -55,34 +50,41 @@
 					</button>
 				</div>
 
-				<!-- Profile Card -->
 				<div class="px-4 mt-4">
 					<div
 						class="px-5 py-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col items-center">
-						<!-- Avatar -->
-						<div class="mb-3">
-							<img
-								src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/customer/customer15.jpg"
-								alt="User profile"
-								class="w-16 h-16 rounded-full object-cover border-2 border-indigo-50/30 shadow-sm transition-transform duration-200 hover:scale-105"
-								loading="lazy" />
+						<div
+							v-if="!profile"
+							class="flex flex-col items-center animate-pulse">
+							<div
+								class="w-16 h-16 rounded-full bg-gray-200 mb-3"></div>
+							<div
+								class="h-4 bg-gray-200 rounded w-24 mb-1"></div>
+							<div class="h-3 bg-gray-200 rounded w-16"></div>
 						</div>
-
-						<!-- Email -->
-						<span
-							v-if="profile && profile.email"
-							class="text-base font-semibold text-gray-800 text-center line-clamp-1">
-							{{ (profile?.email as string)?.split('@')[0] || 'Loading...' }}
-						</span>
-
-						<!-- Role -->
-						<p class="text-sm text-gray-500 mt-1 text-center">
-							{{ profile?.role?.name || 'Website Contributor' }}
-						</p>
+						<template v-else>
+							<div class="mb-3">
+								<img
+									src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/customer/customer15.jpg"
+									alt="User profile"
+									class="w-16 h-16 rounded-full object-cover border-2 border-indigo-50/30 shadow-sm transition-transform duration-200 hover:scale-105"
+									loading="lazy" />
+							</div>
+							<span
+								class="text-base font-semibold text-gray-800 text-center line-clamp-1">
+								{{
+									profile.email?.split('@')[0] || 'Loading...'
+								}}
+							</span>
+							<p class="text-sm text-gray-500 mt-1 text-center">
+								{{
+									profile.role?.name || 'Website Contributor'
+								}}
+							</p>
+						</template>
 					</div>
 				</div>
 
-				<!-- Navigation -->
 				<nav
 					class="flex-1 space-y-1 overflow-y-auto relative pt-4 pb-16">
 					<Transition name="slide-top" appear>
@@ -111,7 +113,7 @@
 									item.url !== $route.fullPath,
 							}"
 							@click="onNavigate(item)">
-							<div v-if="item.url" class="flex">
+							<div v-if="item.url" class="flex items-center">
 								<component
 									v-if="item.icon"
 									:is="item.icon"
@@ -121,13 +123,12 @@
 									:class="{
 										'font-bold':
 											item.url === $route.fullPath,
-									}"
-									>{{ item.name }}</span
-								>
+									}">
+									{{ item.name }}
+								</span>
 							</div>
 						</div>
 
-						<!-- Nested Children with Toggle -->
 						<div
 							v-for="childItem in selectedBar.child || []"
 							:key="'sub-' + childItem.name">
@@ -160,7 +161,6 @@
 										}" />
 								</div>
 
-								<!-- Submenu -->
 								<Transition name="slide">
 									<div
 										v-show="isOpen(childItem.name)"
@@ -186,7 +186,6 @@
 					</TransitionGroup>
 				</nav>
 
-				<!-- Footer Area - Logout Button -->
 				<div
 					class="flex p-4 border-t absolute bottom-0 border-gray-200 w-full">
 					<button
@@ -211,49 +210,38 @@
 		</div>
 	</aside>
 </template>
+
 <script setup lang="ts">
-import { markRaw, ref } from 'vue';
-import { MenuSidebar } from '~/constants/menus';
+import { ref, onMounted, watchEffect } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '~/store/users';
-import type { ChildMenus, Menus } from '~/types/Menus';
+import { MenuSidebar } from '~/constants/menus';
+import type { Menus, ChildMenus } from '~/types/Menus';
 import type { User } from '~/types/user.type';
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
-const profile = ref<any>();
-
-// Simpan status open/close dropdown berdasarkan nama menu
-const openMenus = ref<any>({});
-
-const toggleDropdown = (name: any) => {
-	openMenus.value = {
-		...openMenus.value,
-		[name]: !openMenus.value[name],
-	};
-};
-
-const isOpen = (name: any) => {
-	return openMenus.value[name] || false;
-};
-
+const profile = ref<User | null>(null);
+const openMenus = ref<Record<string, boolean>>({});
 const navItems = ref<Menus[]>(MenuSidebar);
 const selectedBar = ref<Menus>(navItems.value[0]);
 const isSidebarOpen = ref(false);
+
+const toggleDropdown = (name: string) => {
+	openMenus.value = { ...openMenus.value, [name]: !openMenus.value[name] };
+};
+
+const isOpen = (name: string) => openMenus.value[name] || false;
 
 const toggleSidebar = () => {
 	isSidebarOpen.value = !isSidebarOpen.value;
 };
 
-const route = useRoute();
-
-// Auto-buka dropdown jika salah satu children aktif
 const autoOpenDropdowns = () => {
 	const openState = {} as Record<string, boolean>;
 	selectedBar.value.child?.forEach((item) => {
-		if (
-			item.children &&
-			item.children.some((child) => child.url === route.fullPath)
-		) {
+		if (item.children?.some((child) => child.url === route.fullPath)) {
 			openState[item.name] = true;
 		}
 	});
@@ -261,58 +249,35 @@ const autoOpenDropdowns = () => {
 };
 
 const onNavigate = (item: ChildMenus) => {
-	if (item.isBlank) {
-		window.open(item.url, '_blank');
-	} else {
-		router.push(item.url);
-	}
+	if (item.isBlank) return window.open(item.url, '_blank');
+	router.push(item.url);
 };
 
 const logout = async () => {
 	try {
-		// Panggil endpoint logout
-		await $fetch('/api/logout', {
-			method: 'POST',
-		});
-
-		// Hapus token juga di client (jaga-jaga)
+		await $fetch('/api/logout', { method: 'POST' });
 		const token = useCookie('auth_token');
 		token.value = null;
-
-		// Redirect ke login
 		await navigateTo('/auth/login', { replace: true });
 	} catch (error) {
 		console.error('Logout gagal:', error);
-		// Tetap redirect ke login meskipun error
-		// await navigateTo('/login', { replace: true });
 	}
 };
 
 const getDataProfile = async () => {
+	const token = useCookie('auth_token');
+	if (!token.value) return navigateTo('/auth/login', { replace: true });
+
 	try {
-		const token = useCookie('auth_token');
-
-		console.log('token : ', token.value);
-
-		// const {token} = useAuth();
-
-		if (!token.value) {
-			navigateTo('/auth/login', { replace: true });
-		}
-
 		const profileAuth = await $fetch('/api/me', {
-			headers: {
-				Authorization: `Bearer ${userStore.token}`,
-			},
+			headers: { Authorization: `Bearer ${userStore.token}` },
 		});
-
-		// Convert created_at to Date object
 		const userData = {
 			...profileAuth.data,
-			created_at: new Date(profileAuth?.data.created_at as string),
+			created_at: new Date(profileAuth.data.created_at as string),
 		};
-		profile.value = userData;
-		userStore.setAuthMe(profile.value);
+		profile.value = userData as User;
+		userStore.setAuthMe(userData as User);
 	} catch (error) {
 		console.error('Error fetching profile:', error);
 		navigateTo('/auth/login', { replace: true });
@@ -321,68 +286,54 @@ const getDataProfile = async () => {
 
 onMounted(() => {
 	getDataProfile();
-	const data = navItems?.value?.filter((nav) =>
-		nav?.child.some(
+	const matched = navItems.value.filter((nav) =>
+		nav.child.some(
 			(c) =>
-				c.url === route?.fullPath ||
-				c.children?.some((child) => child?.url === route?.fullPath)
+				c.url === route.fullPath ||
+				c.children?.some((child) => child.url === route.fullPath)
 		)
 	);
-
-	if (data.length > 0) {
-		selectedBar.value = data[0];
-	}
-
-	// Set openMenus berdasarkan route aktif
+	if (matched.length > 0) selectedBar.value = matched[0];
 	openMenus.value = autoOpenDropdowns();
 });
 
-// Responsif saat route berubah
 watchEffect(() => {
 	openMenus.value = autoOpenDropdowns();
 });
 </script>
 
-<style>
-/* Fade */
+<style scoped>
 .fade-enter-active,
 .fade-leave-active {
 	transition: opacity 0.3s ease;
 }
-
 .fade-enter-from,
 .fade-leave-to {
 	opacity: 0;
 }
 
-/* Slide Fade */
 .slide-fade-enter-active,
 .slide-fade-leave-active {
 	transition: all 0.3s ease;
 }
-
 .slide-fade-enter-from,
 .slide-fade-leave-to {
 	opacity: 0;
 	transform: translateY(10px);
 }
 
-/* Slide Top */
 .slide-top-enter-active {
 	transition: all 0.3s ease;
 }
-
 .slide-top-enter-from {
 	opacity: 0;
 	transform: translateY(-10px);
 }
 
-/* List Animation */
 .list-enter-active,
 .list-leave-active {
 	transition: all 0.3s ease;
 }
-
 .list-enter-from,
 .list-leave-to {
 	opacity: 0;
@@ -395,7 +346,6 @@ watchEffect(() => {
 	max-height: 200px;
 	overflow: hidden;
 }
-
 .slide-enter-from,
 .slide-leave-to {
 	opacity: 0;
