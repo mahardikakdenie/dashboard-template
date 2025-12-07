@@ -20,9 +20,10 @@ export default defineEventHandler((event) => {
 
   try {
     // Verifikasi token
-    const decoded = jwt.verify(token, config.jwtSecret) as User;
+    // const decoded = jwt.verify(token, config.jwtSecret) as User;
     // Attach user ke context (bisa dipakai di handler)
-    event.context.user = decoded;
+    // event.context.user = decoded;
+    event.context.token = token;
   } catch (err) {
     throw createError({ statusCode: 401, message: 'Unauthorized: Invalid or expired token' });
   }
