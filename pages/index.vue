@@ -2,7 +2,7 @@
 	<div>
 		<div class="flex justify-between gap-4">
 			<div class="flex items-center">
-				<h4 class="font-bold text-xl">Welcome, {{ currentUser?.name }}</h4>
+				<h4 class="font-bold text-xl">Welcome, {{ currentUser?.email }}</h4>
 			</div>
 
 			<div>
