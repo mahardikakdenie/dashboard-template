@@ -28,12 +28,7 @@ const login = async () => {
   loading.value = true;
 
   try {
-    const res: {
-      success: boolean;
-      message: string;
-      token?: string;
-      user: User;
-    } = await $fetch('/api/auth', {
+    const res = await $fetch('/api/auth/login', {
       method: 'POST',
       body: {
         email: email.value,
@@ -41,18 +36,18 @@ const login = async () => {
       },
     });
 
-    if (res.success) {
+    if (res.meta.status) {
       // Simpan token ke cookie
       const token = useCookie('auth_token');
-      token.value = res.token ?? '';
+      token.value = res.data.access_token ?? '';
       
       
-      console.log("token : ", res.user);
+      console.log("token : ", res.data.access_token);
       
-      authStore.setToken(res.token as string);
+      authStore.setToken(res.data.access_token as string);
       
       
-      useChangeToken(res.token ?? authStore.token, res.user);
+      useChangeToken(res.data.access_token ?? authStore.token, res.data.user);
       // Redirect ke dashboard
       await navigateTo('/', { replace: true });
       // window.location.href = '/';
