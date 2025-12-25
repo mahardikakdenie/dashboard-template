@@ -1,28 +1,46 @@
-import { CommonResponse } from "~/types/common.types";
+import { CommonResponse, META } from "~/types/common.types";
 import auth from "../middleware/auth";
 
-export default defineEventHandler(async (event) => {
-    const config = useRuntimeConfig();
-    const endpoint = 'roles';
-    const urlEndpoint = `${config.public.apiBaseUrl}`;
+export default defineEventHandler(async (event): Promise<{meta: META, data: any}> => {
+  const config = useRuntimeConfig();
+  const urlEndpoint = `${config.public.apiBaseUrl}/user/role`;
 
-    try {
-        await auth(event);
+  try {
+    await auth(event);
+    const token = event.context.token;
 
-        const masterData = await $fetch<CommonResponse<any[]>[]>(urlEndpoint);
-        const roleData = masterData.find(data => data.name === endpoint);
-        const userData = masterData.find(data => data?.name === 'users');
-
-        return {
-            meta: {
-                status: 200,
-            },
-            data: roleData?.datas.map((role) => ({
-                ...role,
-                user_created: userData?.datas.find(user => user.id === role.created_by),
-            })),
-        }
-    } catch (error) {
-        throw createError({ statusCode: 500 });
+    if (!token) {
+      throw createError({ statusCode: 401, message: 'Unauthorized: Missing token' });
     }
+
+    const { limit, page, search } = getQuery(event)
+
+    const response = await $fetch<any>(urlEndpoint, {
+      method: 'GET',
+      params: {
+        limit,
+        page,
+        search,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return {
+      meta: response.meta,
+      data: response.data,
+    };
+  } catch (error: any) {
+    console.log(error);
+    
+    const statusCode = error.statusCode || error.status || 500;
+    const message = error.message || 'Internal Server Error';
+
+    throw createError({
+      statusCode,
+      message,
+    });
+  }
 });
