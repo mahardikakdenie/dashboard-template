@@ -27,7 +27,6 @@ const handleChange = (event: Event) => {
 			@change="handleChange"
 			class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 focus:ring-2"
 			:aria-checked="checked" />
-		<!-- Slot opsional untuk label teks -->
 		<span
 			v-if="$slots.default"
 			class="ml-2 text-sm text-gray-700 dark:text-gray-300">
