@@ -73,7 +73,7 @@
 							<span
 								class="text-base font-semibold text-gray-800 text-center line-clamp-1">
 								{{
-									profile.email?.split('@')[0] || 'Loading...'
+									profile.name ?? 'Loading...'
 								}}
 							</span>
 							<p class="text-sm text-gray-500 mt-1 text-center">
