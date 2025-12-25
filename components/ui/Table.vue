@@ -24,6 +24,9 @@ const props = withDefaults(
     showTitle?: boolean;
     isLoading?: boolean;
     itemsPerPage?: number;
+    itemsTotalPages?: number;
+    itemsCurrentPage?: number;
+    itemsTotalData?: number;
   }>(),
   {
     headers: () => [
@@ -40,20 +43,18 @@ const props = withDefaults(
   }
 );
 
-const emit = defineEmits(['open-modal-create', 'delete', 'update', 'sort']);
+const emit = defineEmits(['open-modal-create', 'delete', 'update', 'sort', 'next-page', 'prev-page', 'change-per-page']);
 
-const currentPage = ref(1);
+const currentPage = ref(props.itemsCurrentPage ?? 1);
 const localItemsPerPage = computed(() => props.itemsPerPage);
 
 // get data paginated
 const paginatedData = computed(() => {
-  const start = (currentPage.value - 1) * localItemsPerPage.value;
-  const end = start + localItemsPerPage.value;
-  return props.datas.slice(start, end);
+  return props.datas;
 });
 
 // Total Pages
-const totalPages = computed(() => Math.ceil((props.datas.length || 0) / localItemsPerPage.value));
+const totalPages = computed(() => props.itemsTotalPages ?? (Math.ceil((props.datas.length || 0) / localItemsPerPage.value)));
 
 // Generate pagination Button (Max 5 button)
 const pages = computed(() => {
@@ -78,14 +79,17 @@ const pages = computed(() => {
 
 function goToPage(page: number | string) {
   if (typeof page === 'number') currentPage.value = page;
+  emit('next-page', currentPage.value);
 }
 
 function prevPage() {
   if (currentPage.value > 1) currentPage.value--;
+  emit('prev-page', currentPage.value);
 }
 
 function nextPage() {
   if (currentPage.value < totalPages.value) currentPage.value++;
+  emit('next-page', currentPage.value);
 }
 
 //  Helpers: get value nested (ex: user.profile.createdAt)
@@ -112,6 +116,11 @@ function formatValue(value: any, column: TableColumn, row: any) {
 const openModalCreate = () => {
   emit('open-modal-create');
 };
+
+const handleChangePerPage = (value: string) => {
+  emit('change-per-page', parseInt(value));
+
+}
 </script>
 
 <template>
@@ -134,8 +143,7 @@ const openModalCreate = () => {
         <!-- Create Button -->
         <button
           class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-600 border border-slate-700 rounded-md shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 transition-all duration-200"
-          @click="openModalCreate"
-        >
+          @click="openModalCreate">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
@@ -144,10 +152,10 @@ const openModalCreate = () => {
 
         <!-- Filter Button -->
         <button
-          class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-500 border border-slate-600 rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 transition-all duration-200"
-        >
+          class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-500 border border-slate-600 rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 transition-all duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707v5.172a1 1 0 01-.293.707l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 01-.293-.707v-5.172a1 1 0 00-.293-.707L3.293 5.293A1 1 0 013 4.586V4z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707v5.172a1 1 0 01-.293.707l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 01-.293-.707v-5.172a1 1 0 00-.293-.707L3.293 5.293A1 1 0 013 4.586V4z" />
           </svg>
           Filter
         </button>
@@ -161,14 +169,10 @@ const openModalCreate = () => {
           <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
             <BaseCheckbox :checked="false" />
           </th>
-          <th
-            v-for="col in headers"
-            :key="col.key"
-            :class="[
-              'px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider',
-              col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'
-            ]"
-          >
+          <th v-for="col in headers" :key="col.key" :class="[
+            'px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider',
+            col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'
+          ]">
             {{ $t(col.label) }}
           </th>
         </tr>
@@ -187,22 +191,15 @@ const openModalCreate = () => {
 
         <!-- Data Rows -->
         <template v-else>
-          <tr
-            v-for="(row, index) in paginatedData"
-            :key="index"
-            class="hover:bg-gray-50 transition-colors duration-200"
-          >
+          <tr v-for="(row, index) in paginatedData" :key="index"
+            class="hover:bg-gray-50 transition-colors duration-200">
             <td class="px-6 py-4">
               <BaseCheckbox :checked="false" />
             </td>
-            <td
-              v-for="col in headers"
-              :key="col.key"
-              :class="[
-                'px-6 py-4 whitespace-nowrap text-sm text-gray-900',
-                col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'
-              ]"
-            >
+            <td v-for="col in headers" :key="col.key" :class="[
+              'px-6 py-4 whitespace-nowrap text-sm text-gray-900',
+              col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'
+            ]">
               <!-- Slot kustom untuk kolom tertentu -->
               <slot :name="`cell(${col.key})`" :value="getNestedValue(row, col.key)" :row="row">
                 <!-- Default rendering -->
@@ -216,22 +213,16 @@ const openModalCreate = () => {
                 </div>
 
                 <div v-else-if="col.type === 'image' && getNestedValue(row, col.key)">
-                  <img
-                    :src="getNestedValue(row, col.key)"
-                    :alt="col.label"
-                    class="w-16 h-12 object-cover rounded border"
-                  />
+                  <img :src="getNestedValue(row, col.key)" :alt="col.label"
+                    class="w-16 h-12 object-cover rounded border" />
                 </div>
 
-                <span
-                  v-else-if="col.type === 'status'"
-                  class="px-2 py-1 rounded-full text-xs font-semibold capitalize"
+                <span v-else-if="col.type === 'status'" class="px-2 py-1 rounded-full text-xs font-semibold capitalize"
                   :class="{
                     'bg-green-100 text-green-800': ['active', 'Active', 'available'].includes(getNestedValue(row, col.key)),
                     'bg-red-100 text-red-800': ['inactive', 'Inactive'].includes(getNestedValue(row, col.key)),
                     'bg-yellow-100 text-yellow-800': ['pending'].includes(getNestedValue(row, col.key)?.toLowerCase())
-                  }"
-                >
+                  }">
                   {{ formatValue(getNestedValue(row, col.key), col, row) }}
                 </span>
 
@@ -244,8 +235,10 @@ const openModalCreate = () => {
           <tr v-if="!isLoading && (!datas || datas.length === 0)">
             <td :colspan="headers.length + 1" class="py-10 text-center space-y-3">
               <div class="flex justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-400" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <p class="text-lg font-semibold text-slate-700">Data tidak tersedia</p>
@@ -257,36 +250,35 @@ const openModalCreate = () => {
     </table>
 
     <!-- Pagination -->
-    <div v-if="!isLoading && datas.length > 0" class="flex items-center justify-end gap-4 mt-6">
-      <button
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
-      >
-        Previous
-      </button>
+    <div :class="['flex justify-between mt-6']">
+      <div v-if="!isLoading && datas.length > 0" class="flex items-center">
+        <select class="p-1 mt-2 rounded border border-gray-200" :value="props.itemsPerPage" @change="(e) => {
+          handleChangePerPage((e.target as HTMLSelectElement).value)
+        }">
+          <option value="5">5</option>
+          <option value="10">10</option>
+        </select>
+      </div>
+      <div v-if="!isLoading && datas.length > 0" class="flex items-center justify-end gap-4">
+        <button @click="prevPage" :disabled="currentPage === 1"
+          class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition">
+          Previous
+        </button>
 
-      <div class="flex space-x-1">
-        <button
-          v-for="page in pages"
-          :key="page"
-          @click="goToPage(page)"
-          :class="[
+        <div class="flex space-x-1">
+          <button v-for="page in pages" :key="page" @click="goToPage(page)" :class="[
             'px-3 py-1 rounded-md text-sm font-medium transition',
             currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          ]"
-        >
-          {{ page }}
+          ]">
+            {{ page }}
+          </button>
+        </div>
+
+        <button @click="nextPage" :disabled="currentPage === totalPages"
+          class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition">
+          Next
         </button>
       </div>
-
-      <button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
-      >
-        Next
-      </button>
     </div>
   </div>
 </template>
