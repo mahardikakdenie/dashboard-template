@@ -74,7 +74,7 @@ const getDataUsers = async (currentPage: number = 1) => {
       name: user.name ?? '-',
       email: user.email ?? '-',
       status: user.status ?? 'inactive',
-      role: String(user.role?.name || 'superadmin'),
+      role: String(user.role?.name || 'unrole'),
     }));
   } catch (error) {
     console.error('Failed to fetch users:', error);
@@ -95,7 +95,7 @@ const handleChangePage = (currentPage: number) => {
 const handleChangePerpage = (currentPerpage: number) => {
   perPage.value = currentPerpage;
   getDataUsers();
-  
+
 };
 
 // --- Handler aksi ---
@@ -120,20 +120,40 @@ const handleUpdate = (user: UserTable) => {
     <!-- Tabel Utama -->
     <div class="mt-4">
       <div class="bg-white shadow p-4 rounded-md">
-        <UiTable
-          :headers="headerTables"
-          :datas="datas"
-          :is-loading="isLoading"
-          :items-total-pages="meta?.last_page"
-          :items-per-page="meta?.per_page"
-          :items-current-page="meta?.page"
-          :items-total-data="meta?.total"
-          @delete="handleDelete"
-          @update="handleUpdate"
-          @next-page="handleChangePage"
-          @prev-page="handleChangePage"
-          @change-per-page="handleChangePerpage"
-        >
+        <!-- Search & Actions -->
+        <div class="flex justify-between my-4">
+          <div>
+            <slot name="search">
+              <InputFeature placeholder="Search..." />
+            </slot>
+          </div>
+          <div class="flex flex-wrap items-center gap-4">
+            <!-- Create Button -->
+            <button
+              class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-600 border border-slate-700 rounded-md shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 transition-all duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              Create Data
+            </button>
+
+            <!-- Filter Button -->
+            <button
+              class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-500 border border-slate-600 rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 transition-all duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707v5.172a1 1 0 01-.293.707l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 01-.293-.707v-5.172a1 1 0 00-.293-.707L3.293 5.293A1 1 0 013 4.586V4z" />
+              </svg>
+              Filter
+            </button>
+          </div>
+        </div>
+        <UiTable :headers="headerTables" :datas="datas" :is-loading="isLoading" :items-total-pages="meta?.last_page"
+          :items-per-page="meta?.per_page" :items-current-page="meta?.page" :items-total-data="meta?.total"
+          @delete="handleDelete" @update="handleUpdate" @next-page="handleChangePage" @prev-page="handleChangePage"
+          @change-per-page="handleChangePerpage">
           <!-- Opsional: custom rendering -->
           <template #cell(role)="{ value }">
             <span class="px-2 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-medium">
