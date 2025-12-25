@@ -126,7 +126,7 @@ const handleChangePerPage = (value: string) => {
 <template>
   <div class="base-table">
     <!-- Title -->
-    <div v-if="showTitle">
+    <div v-if="showTitle" class="mb-5">
       <span class="font-bold text-slate-500 capitalize">
         {{ $route.params.slug ? formattedCapitalize($route.params.slug) : 'Data' }}
       </span>
