@@ -4,3 +4,11 @@ export type CommonResponse<T> = {
     id: number;
     datas: T;
 }
+
+export type META = {
+  status: number;
+  last_page: number;
+  page: number;
+  per_page: number;
+  total: number;
+}
