@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { User, UserTable } from '~/types/user.type';
 import type { TableColumn } from '../ui/Table.vue';
+import { useUserStore } from '~/store/users';
+import type { META } from '~/types/common.types';
 
 const route = useRoute();
 const isLoading = ref<boolean>(false);
@@ -48,19 +50,31 @@ const headerTables = computed<TableColumn[]>(() => {
 
 // --- Data ---
 const datas = ref<UserTable[]>([]);
+const meta = ref<META>();
+const perPage = ref<number>(5);
 
 // --- Fetch Users ---
-const getDataUsers = async () => {
+
+const userStore = useUserStore();
+const getDataUsers = async (currentPage: number = 1) => {
   isLoading.value = true;
   try {
-    const response = await $fetch<{ data: User[] }>('/api/users');
+    const response = await $fetch<{ data: User[]; meta: META }>('/api/users', {
+      params: {
+        limit: perPage.value,
+        page: currentPage,
+      },
+      headers: { Authorization: `Bearer ${userStore.token}` },
+    });
+
+    meta.value = response.meta;
 
     datas.value = (response.data ?? []).map((user) => ({
       id: user.id,
       name: user.name ?? '-',
       email: user.email ?? '-',
       status: user.status ?? 'inactive',
-      role:  user.role || 'superadmin', // Asumsi role bisa objek atau string
+      role: String(user.role?.name || 'superadmin'),
     }));
   } catch (error) {
     console.error('Failed to fetch users:', error);
@@ -73,6 +87,16 @@ const getDataUsers = async () => {
 onMounted(() => {
   getDataUsers();
 });
+
+const handleChangePage = (currentPage: number) => {
+  getDataUsers(currentPage);
+};
+
+const handleChangePerpage = (currentPerpage: number) => {
+  perPage.value = currentPerpage;
+  getDataUsers();
+  
+};
 
 // --- Handler aksi ---
 const handleDelete = (user: UserTable) => {
@@ -100,8 +124,15 @@ const handleUpdate = (user: UserTable) => {
           :headers="headerTables"
           :datas="datas"
           :is-loading="isLoading"
+          :items-total-pages="meta?.last_page"
+          :items-per-page="meta?.per_page"
+          :items-current-page="meta?.page"
+          :items-total-data="meta?.total"
           @delete="handleDelete"
           @update="handleUpdate"
+          @next-page="handleChangePage"
+          @prev-page="handleChangePage"
+          @change-per-page="handleChangePerpage"
         >
           <!-- Opsional: custom rendering -->
           <template #cell(role)="{ value }">
