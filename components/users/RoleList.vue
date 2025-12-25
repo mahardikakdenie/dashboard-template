@@ -11,8 +11,8 @@ const headers = ref<TableColumn[]>([
 		label: 'Name',
 	},
 	{
-		key: 'created_by',
-		label: 'Created By',
+		key: 'descriptions',
+		label: 'Descriptions',
 		type: 'text',
 	},
 	{
