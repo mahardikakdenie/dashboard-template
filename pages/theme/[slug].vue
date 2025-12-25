@@ -7,7 +7,7 @@
 </template>
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'auth' // ← nama file tanpa ekstensi: 'auth'
+  middleware: 'auth'
 });
 const route = useRoute();
 

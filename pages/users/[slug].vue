@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 definePageMeta({
-  middleware: 'auth' // ← nama file tanpa ekstensi: 'auth'
+  middleware: 'auth'
 });
 const route = useRoute();
 const isUserListPage = computed(() => route.params.slug === 'user-lists');
