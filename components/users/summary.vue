@@ -13,6 +13,7 @@ import buildingIcon from '~/components/icons/building.vue';
 import carouselVerticalIcon from '~/components/icons/carousel-vertical.vue';
 import chalkboardIcon from '~/components/icons/chalkboard.vue';
 import bussinesPlanIcon from '~/components/icons/bussines-plan.vue';
+import { useUserStore } from '~/store/users';
 
 export interface Summary {
 	name: string;
@@ -48,11 +49,16 @@ const summaries = ref<Summary[]>([
 	},
 ]);
 
+
+const userStore = useUserStore();
+
 const getDataSummary = async () => {
 	try {
-		const response = await $fetch('/api/users/summaries');
+		const response = await $fetch('/api/users/summaries', {
+			headers: { Authorization: `Bearer ${userStore.token}` },
+		});
 		
-		summaries.value[0].value = response.data.total ?? 0;
+		summaries.value[0].value = response.data.all ?? 0;
 		summaries.value[1].value = response.data.active ?? 0;
 		summaries.value[2].value = response.data.inactive ?? 0;
 		summaries.value[3].value = response.data.new ?? 0;
