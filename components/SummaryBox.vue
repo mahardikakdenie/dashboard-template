@@ -11,7 +11,7 @@
 			<!-- Growth Badge -->
 			<div>
 				<span
-					class="bg-green-100 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full inline-flex items-center">
+					class="text-xs font-medium px-2.5 py-1 rounded-full inline-flex items-center" :class="[summary.percentage >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700']">
 					<IconsGrowth />
 					+{{ summary.percentage }}%
 				</span>
