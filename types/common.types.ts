@@ -5,6 +5,11 @@ export type CommonResponse<T> = {
     data: T;
 }
 
+export type ResponseApi<T> = {
+  meta: META
+  data: T,
+}
+
 export type META = {
   status: number;
   last_page: number;
