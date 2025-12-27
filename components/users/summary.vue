@@ -26,25 +26,25 @@ const summaries = ref<Summary[]>([
 	{
 		name: 'total_users',
 		value: 0,
-		percentage: 20,
+		percentage: 0,
 		icon: markRaw(buildingIcon),
 	},
 	{
 		name: 'active_users',
 		value: 0,
-		percentage: 20,
+		percentage: 0,
 		icon: markRaw(carouselVerticalIcon),
 	},
 	{
 		name: 'inactive_users',
 		value: 0,
-		percentage: 20,
+		percentage: 0,
 		icon: markRaw(chalkboardIcon),
 	},
 	{
 		name: 'new_users',
 		value: 0,
-		percentage: 40,
+		percentage: 0,
 		icon: markRaw(bussinesPlanIcon),
 	},
 ]);
@@ -59,9 +59,13 @@ const getDataSummary = async () => {
 		});
 		
 		summaries.value[0].value = response.data.all ?? 0;
+		summaries.value[0].percentage = response.data.all_change_percent;
 		summaries.value[1].value = response.data.active ?? 0;
+		summaries.value[1].percentage = response.data.active_change_percent ?? 0;
 		summaries.value[2].value = response.data.inactive ?? 0;
+		summaries.value[2].percentage = response.data.inactive_change_percent ?? 0;
 		summaries.value[3].value = response.data.new ?? 0;
+		summaries.value[3].percentage = response.data.new_change_percent ?? 0;
 	} catch (error) {
 		console.error('Error fetching summary data:', error);
 	}
