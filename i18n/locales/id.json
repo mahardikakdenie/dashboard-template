@@ -52,5 +52,6 @@
   "enter_warranty_info": "Masukkan info garansi",
   "enter_color": "Masukkan warna",
   "enter_material": "Masukkan material",
-  "enter_company_id": "Masukkan ID perusahaan"
+  "enter_company_id": "Masukkan ID perusahaan",
+  "total_roles": "Jumlah Role"
 }

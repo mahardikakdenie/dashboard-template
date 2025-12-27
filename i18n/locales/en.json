@@ -52,5 +52,6 @@
   "enter_warranty_info": "Enter warranty info",
   "enter_color": "Enter color",
   "enter_material": "Enter material",
-  "enter_company_id": "Enter company ID"
+  "enter_company_id": "Enter company ID",
+  "total_roles": "Total Roles"
 }
