@@ -20,6 +20,7 @@ export type User = {
     name?: string;
     username?: string;
     email?: string;
+    phone?: string;
     status?: UserType;
     created_at?: Date;
     avatar?: string;
@@ -38,8 +39,10 @@ export type User = {
 export type UserTable = {
     id?: string;
     name?: string;
+    username?: string;
     email?: string;
     role?: string;
+    phone?: string;
     status?: UserType;
     actions?: null;
 }
