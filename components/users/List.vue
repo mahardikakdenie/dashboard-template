@@ -7,7 +7,6 @@ import type { META } from '~/types/common.types';
 const route = useRoute();
 const isLoading = ref<boolean>(false);
 
-// --- Default headers ---
 const defaultHeaders: TableColumn[] = [
   {
     key: 'name',
@@ -17,6 +16,16 @@ const defaultHeaders: TableColumn[] = [
   {
     key: 'email',
     label: 'Email',
+    type: 'text',
+  },
+  {
+    key: 'phone',
+    label: 'Phone',
+    type: 'text',
+  },
+  {
+    key: 'username',
+    label: 'Username',
     type: 'text',
   },
   {
@@ -36,7 +45,6 @@ const defaultHeaders: TableColumn[] = [
   },
 ];
 
-// --- Tentukan headers berdasarkan slug ---
 const headerTables = computed<TableColumn[]>(() => {
   const slug = Array.isArray(route.params.slug) ? route.params.slug[0] : (route.params.slug as string);
 
@@ -44,17 +52,13 @@ const headerTables = computed<TableColumn[]>(() => {
     return defaultHeaders;
   }
 
-  // Return default jika slug tidak cocok
   return defaultHeaders;
 });
 
-// --- Data ---
 const datas = ref<UserTable[]>([]);
 const meta = ref<META>();
 const perPage = ref<number>(5);
 const modalCloseVisible = ref<boolean>(false);
-
-// --- Fetch Users ---
 
 const userStore = useUserStore();
 const getDataUsers = async (currentPage: number = 1) => {
@@ -73,8 +77,10 @@ const getDataUsers = async (currentPage: number = 1) => {
     datas.value = (response.data ?? []).map((user) => ({
       id: user.id,
       name: user.name ?? '-',
+      username: user.username ?? '-',
       email: user.email ?? '-',
       status: user.status ?? 'inactive',
+      phone: user.phone ?? '-',
       role: String(user.role?.name || 'unrole'),
     }));
   } catch (error) {
@@ -99,17 +105,14 @@ const handleChangePerpage = (currentPerpage: number) => {
 
 };
 
-// --- Handler aksi ---
 const handleDelete = (user: UserTable) => {
   if (confirm(`Hapus user ${user.name}?`)) {
     console.log('Deleting user:', user);
-    // TODO: Panggil API delete
   }
 };
 
 const handleUpdate = (user: UserTable) => {
   console.log('Edit user:', user);
-  // TODO: Buka modal edit
 };
 
 const openModalCreate = () => { 
@@ -119,10 +122,8 @@ const openModalCreate = () => {
 
 <template>
   <div>
-    <!-- Ringkasan User -->
     <UsersSummary />
 
-    <!-- Tabel Utama -->
     <div class="mt-4">
       <div class="bg-white shadow p-4 rounded-md">
         <!-- Search & Actions -->
