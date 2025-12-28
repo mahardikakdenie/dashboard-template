@@ -54,7 +54,7 @@
 					<div
 						class="px-5 py-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col items-center">
 						<div
-							v-if="!profile"
+							v-if="!userStore.me"
 							class="flex flex-col items-center animate-pulse">
 							<div
 								class="w-16 h-16 rounded-full bg-gray-200 mb-3"></div>
@@ -73,12 +73,12 @@
 							<span
 								class="text-base font-semibold text-gray-800 text-center line-clamp-1">
 								{{
-									profile.name ?? 'Loading...'
+									userStore.me.name ?? 'Loading...'
 								}}
 							</span>
 							<p class="text-sm text-gray-500 mt-1 text-center">
 								{{
-									profile.role?.name || 'Website Contributor'
+									userStore.me.role?.name || 'Website Contributor'
 								}}
 							</p>
 						</template>
@@ -285,7 +285,9 @@ const getDataProfile = async () => {
 };
 
 onMounted(() => {
-	getDataProfile();
+	// getDataProfile();
+	console.log("user : ", userStore.me);
+	
 	const matched = navItems.value.filter((nav) =>
 		nav.child.some(
 			(c) =>
