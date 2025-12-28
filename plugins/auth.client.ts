@@ -1,35 +1,36 @@
-import { useUserStore } from "~/store/users";
+import { defineNuxtPlugin, useCookie, useFetch } from '#imports';
+import { useUserStore } from '~/store/users';
+import type { User } from '~/types/user.type';
 
-// plugins/auth.client.ts
 export default defineNuxtPlugin(async (nuxtApp) => {
-  if (process.client) {
-    const authStore = useUserStore();
-    const tokenCookie = useCookie('auth_token', {
-      maxAge: 604800,
-      sameSite: 'lax',
-      path: '/',
+  const tokenCookie = useCookie<string | null>('auth_token', {
+    maxAge: 604800,
+    sameSite: 'lax',
+    path: '/',
+  });
+
+  if (!tokenCookie.value) return;
+
+  const authStore = useUserStore();
+  authStore.setToken(tokenCookie.value);
+
+  try {
+    const { data: user, error } = await useFetch<{success: boolean; message: string; data: User}>('/api/me', {
+      headers: { Authorization: `Bearer ${tokenCookie.value}` },
     });
 
-    // Jika ada token, coba ambil data user
-    if (tokenCookie.value) {
-      authStore.setToken(tokenCookie.value);
-
-      try {
-        // Ganti dengan endpoint API-mu
-        const { data: user } = await useFetch('/api/me', {
-          headers: {
-            Authorization: `Bearer ${tokenCookie.value}`,
-          },
-        });
-
-        // if (user.value) {
-        //   authStore.setUserDatas(user);
-        // }
-      } catch (error) {
-        // Token mungkin invalid → logout
-        tokenCookie.value = null;
-        // authStore.clearAuth();
-      }
+    if (error.value || !user.value) {
+      throw new Error('Failed to fetch user');
     }
+
+    const userData: User = {
+      ...user.value.data,
+      created_at: new Date(user.value.data.created_at as Date),
+    };
+
+    authStore.setAuthMe(userData);
+  } catch (err) {
+    tokenCookie.value = null;
+    navigateTo('/auth/login', { replace: true });
   }
 });
