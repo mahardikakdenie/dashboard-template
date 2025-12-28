@@ -1,127 +1,99 @@
 <template>
-	<div>
-		<div class="flex justify-between gap-4">
-			<div class="flex items-center">
-				<h4 class="font-bold text-xl">Welcome, {{ currentUser?.name }}</h4>
-			</div>
+  <div>
+    <div class="flex justify-between items-center gap-4 mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
+      <button
+        class="px-5 py-2 bg-white text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
+      >
+        Filter Date
+      </button>
+    </div>
 
-			<div>
-				<button class="px-5 py-2 bg-white text-sm font-medium text-gray-700 border cursor-pointer border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200">
-                    Filter Date
-                </button>
-			</div>
-		</div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <SummaryBox
+        v-for="(summary, i) in summaries"
+        :key="i"
+        :summary="summary"
+      />
+    </div>
 
-		<div class="mt-4">
-			<div class="grid grid-cols-4 gap-4">
-				<div v-for="(summary, i) in summaries" :key="i">
-					<SummaryBox :summary="summary" />
-				</div>
-			</div>
-		</div>
-
-		<div v-for="i in 3" :key="i" class="mt-4 overflow-hidden rounded-lg shadow bg-white p-4">
-            <div class="flex justify-between my-4">
-                <div>
-                    <span class="font-bold text-slate-500">Companies Data</span>
-                </div>
-                <div>
-                    <button class="border border-green-300 bg-green-400 px-4 rounded text-gray-100 py-1 text-sm hover:bg-green-500 cursor-pointer font-semibold">
-                        Lihat Semua Data
-                    </button>
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">User Growth</h2>
+        <ClientOnly>
+          <VueApexCharts
+            type="area"
+            :options="growthChartOptions"
+            :series="growthChartSeries"
+            height="280"
+          />
+          <template #fallback>
+            <div class="h-72 flex items-center justify-center text-gray-500">
+              Loading chart...
             </div>
-			<table class="min-w-full divide-y divide-gray-200 rounded-xl shadow">
-				<thead class="bg-gray-50">
-					<tr>
-                        <th>
-                            <BaseCheckbox />
-                        </th>
-						<th
-                            v-for="thead in theadCompanies"
-                            :key="thead.key"
-							scope="col"
-							class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-							{{ thead.name }}
-						</th>
-					</tr>
-				</thead>
-				<tbody class="bg-white divide-y divide-gray-200">
-					<tr class="hover:bg-gray-50 transition-colors duration-150">
-                        <td>
-                            <label class="flex justify-center items-center">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 cursor-pointer text-indigo-600 rounded" />
-                            </label>
-                        </td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-							Adrian Herman
-						</td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							Admin Analist
-						</td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							28
-						</td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							Jakarta
-						</td>
-					</tr>
-					<tr class="hover:bg-gray-50 transition-colors duration-150">
-                        <td>
-                            <label class="flex justify-center items-center">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 cursor-pointer text-indigo-600 rounded" />
-                            </label>
-                        </td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-							Budi Santoso
-						</td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							Developer
-						</td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							32
-						</td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							Bandung
-						</td>
-					</tr>
-					<tr class="hover:bg-gray-50 transition-colors duration-150">
-                        <td class="">
-                            <label class="flex items-center justify-center">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 cursor-pointer text-indigo-600 rounded" />
-                            </label>
-                        </td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-							Siti Rahayu
-						</td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							Marketing
-						</td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							25
-						</td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							Surabaya
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+          </template>
+        </ClientOnly>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Company Status</h2>
+        <ClientOnly>
+          <VueApexCharts
+            type="donut"
+            :options="statusChartOptions"
+            :series="statusChartSeries"
+            height="280"
+          />
+          <template #fallback>
+            <div class="h-72 flex items-center justify-center text-gray-500">
+              Loading chart...
+            </div>
+          </template>
+        </ClientOnly>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Monthly Revenue</h2>
+        <ClientOnly>
+          <VueApexCharts
+            type="bar"
+            :options="revenueChartOptions"
+            :series="revenueChartSeries"
+            height="280"
+          />
+          <template #fallback>
+            <div class="h-72 flex items-center justify-center text-gray-500">
+              Loading chart...
+            </div>
+          </template>
+        </ClientOnly>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Active Users Trend</h2>
+        <ClientOnly>
+          <VueApexCharts
+            type="line"
+            :options="trendChartOptions"
+            :series="trendChartSeries"
+            height="280"
+          />
+          <template #fallback>
+            <div class="h-72 flex items-center justify-center text-gray-500">
+              Loading chart...
+            </div>
+          </template>
+        </ClientOnly>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script lang="ts" setup>
+import { ref, computed, onMounted } from 'vue';
+import { markRaw } from 'vue';
 import buildingIcon from '~/components/icons/building.vue';
 import carouselVerticalIcon from '~/components/icons/carousel-vertical.vue';
 import chalkboardIcon from '~/components/icons/chalkboard.vue';
@@ -129,102 +101,133 @@ import bussinesPlanIcon from '~/components/icons/bussines-plan.vue';
 import { useUserStore } from '~/store/users';
 
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'auth',
 });
 
-export interface Summary {
-	name: string;
-	value: number;
-	percentage: number;
-	icon: any;
+interface Summary {
+  name: string;
+  value: number;
+  percentage: number;
+  icon: any;
 }
 
 const userStore = useUserStore();
-
-const currentUser =  computed(() => userStore.me);
-
+const currentUser = computed(() => userStore.me);
 const token = useCookie('auth_token');
 
 const summaries = ref<Summary[]>([
-	{
-		name: 'Total Companies',
-		value: 5672,
-		percentage: 20,
-		icon: markRaw(buildingIcon),
-	},
-	{
-		name: 'Active Companies',
-		value: 4576,
-		percentage: 20,
-		icon: markRaw(carouselVerticalIcon),
-	},
-	{
-		name: 'Total Subscribers',
-		value: 3696,
-		percentage: 20,
-		icon: markRaw(chalkboardIcon),
-	},
-	{
-		name: 'Total Earning',
-		value: 8987858,
-		percentage: 40,
-		icon: markRaw(bussinesPlanIcon),
-	},
+  {
+    name: 'Total Companies',
+    value: 0,
+    percentage: 0,
+    icon: markRaw(buildingIcon),
+  },
+  {
+    name: 'Active Companies',
+    value: 0,
+    percentage: 0,
+    icon: markRaw(carouselVerticalIcon),
+  },
+  {
+    name: 'Total Subscribers',
+    value: 0,
+    percentage: 0,
+    icon: markRaw(chalkboardIcon),
+  },
+  {
+    name: 'Total Earnings',
+    value: 0,
+    percentage: 0,
+    icon: markRaw(bussinesPlanIcon),
+  },
 ]);
 
-const theadCompanies = ref<{
-    name: string;
-    key: string;
-}[]>([
-    {
-        name: 'Company Name',
-        key: 'name',
-    },
-    {
-        name: 'Email',
-        key: 'email',
-    },
-    {
-        name: 'Account URL',
-        key: 'url',
-    },
-    {
-        name: 'PLAN',
-        key: 'plan',
-    },
-    {
-        name: 'Status',
-        key: 'status',
-    },
-]);
-
-const companySummary = ref({
-	total: 0,
-	active: 0,
-	inactive: 0,
-	pending: 0,
-	new: 0,
+const growthChartOptions = ref({
+  chart: { id: 'user-growth', toolbar: { show: false }, zoom: { enabled: false } },
+  xaxis: {
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+    labels: { style: { colors: '#6B7280' } },
+  },
+  yaxis: { labels: { style: { colors: '#6B7280' } } },
+  stroke: { curve: 'smooth' },
+  colors: ['#3B82F6'],
+  dataLabels: { enabled: false },
+  fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.1 } },
+  grid: { borderColor: '#E5E7EB' },
+  tooltip: { theme: 'light' },
 });
+
+const growthChartSeries = ref([
+  { name: 'New Companies',  data: [30, 40, 35, 50, 49, 60, 90, 10, 80] }
+]);
+
+const statusChartOptions = ref({
+  chart: { id: 'status-donut', toolbar: { show: false } },
+  labels: ['Active', 'Inactive', 'Pending'],
+  colors: ['#10B981', '#EF4444', '#F59E0B'],
+  legend: { position: 'bottom', offsetY: 10 },
+  plotOptions: { pie: { donut: { labels: { show: false } } } },
+});
+
+const statusChartSeries = ref([10, 20, 10]);
+
+const revenueChartOptions = ref({
+  chart: { id: 'revenue-bar', toolbar: { show: false } },
+  xaxis: {
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+    labels: { style: { colors: '#6B7280' } },
+  },
+  yaxis: { labels: { style: { colors: '#6B7280' } } },
+  plotOptions: { bar: { borderRadius: 4, horizontal: false } },
+  colors: ['#8B5CF6'],
+  dataLabels: { enabled: false },
+  grid: { borderColor: '#E5E7EB' },
+});
+
+const revenueChartSeries = ref([
+  { name: 'Revenue (IDR)', data: [12000, 19000, 15000, 22000, 18000] },
+]);
+
+const trendChartOptions = ref({
+  chart: { id: 'trend-line', toolbar: { show: false }, zoom: { enabled: false } },
+  xaxis: {
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    labels: { style: { colors: '#6B7280' } },
+  },
+  stroke: { width: 3, curve: 'smooth' },
+  colors: ['#EC4899'],
+  dataLabels: { enabled: false },
+  markers: { size: 4, colors: ['#EC4899'] },
+  grid: { borderColor: '#E5E7EB' },
+  tooltip: { theme: 'light' },
+});
+
+const trendChartSeries = ref([
+  { name: 'Active Users',  data: [40, 60, 55, 70, 65, 80, 75] },
+]);
+
 const getDataSummary = async () => {
-	try {
-		const response: {totalCompany: number; active: number} = await $fetch("/api/companies/summary", {
-			headers: {
-				Authorization: `Bearer ${token.value}`
-			}
-		});
+  try {
+    const response: { totalCompany: number; active: number; inactive: number; pending: number } = await $fetch('/api/companies/summary', {
+      headers: { Authorization: `Bearer ${token.value}` },
+    });
 
-		console.log("response : ", response);
+    summaries.value[0].value = response.totalCompany ?? 0;
+    summaries.value[1].value = response.active ?? 0;
+    summaries.value[2].value = response.active ?? 0;
+    summaries.value[3].value = response.totalCompany * 15890;
 
-		summaries.value[0].value = response?.totalCompany ?? 0;
-		summaries.value[1].value = response?.active ?? 0;
-		
-	} catch (error) {
-		console.log("error fetch company summary : ",error);
-		
-	}
+    statusChartSeries.value = [
+      response.active ?? 0,
+      response.inactive ?? 0,
+      response.pending ?? 0,
+    ];
+  } catch (error) {
+    console.error('Error fetching company summary:', error);
+  }
 };
 
 onMounted(() => {
-	getDataSummary();
+  getDataSummary();
 });
 </script>
