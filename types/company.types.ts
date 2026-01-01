@@ -6,11 +6,12 @@ export type Company = {
     id: string;
     name: string;
     email?: string;
-    status: Status;
-    created_at: Date;
+    status: string;
+    created_at: Date | string;
     description?: string;
     industry?: string;
     website?: string;
     owner?: User;
     members?: User[];
+    url: string;
 };

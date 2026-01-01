@@ -5,7 +5,7 @@ export type CommonResponse<T> = {
     data: T;
 }
 
-export type ResponseApi<T> = {
+export type ResponseApi<T = any> = {
   meta: META
   data: T,
 }
