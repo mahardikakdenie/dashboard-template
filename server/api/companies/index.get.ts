@@ -1,25 +1,30 @@
-import { CommonResponse } from "~/types/common.types";
+import { CommonResponse, ResponseApi } from "~/types/common.types";
 import { getDomain } from "~/utils/defaultCompanyDomain";
+import auth from "../middleware/auth";
+import { Company } from "~/types/company.types";
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event): Promise<ResponseApi<Company[]>> => {
     const config = useRuntimeConfig();
-    const endpoint = 'companies';
-    const urlEndpoint = `${config.public.apiBaseUrl}?name=${endpoint}`;
+    const endpoint = `${config.public.apiBaseUrl}/company`;
     try {
-        const masterData = await $fetch<CommonResponse<any>[]>(urlEndpoint);
+        await auth(event);
+        const token = event.context?.token;
 
-        const comapanyData = masterData.find(data => data.name === endpoint);
-
-        return {
-            meta: {
-                status: 200,
+        const params = getQuery(event);
+        
+        const response = await $fetch<ResponseApi<Company[]>>(endpoint, {
+            method: 'GET',
+            params: params ?? {},
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
             },
-            data: comapanyData?.datas.map((data: any) => ({
-                default_domain_tenant: getDomain(data?.name),
-                ...data,
-            })),
-        }
+        });
+
+        return response;
     } catch (error) {
+        console.log("error :", error);
+        
         throw createError({ statusCode: 500 })
     }
 });
