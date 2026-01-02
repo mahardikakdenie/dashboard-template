@@ -21,35 +21,37 @@ import chalkboardIcon from '~/components/icons/chalkboard.vue';
 import bussinesPlanIcon from '~/components/icons/bussines-plan.vue';
 import { useUserStore } from '~/store/users';
 import type { Company } from '~/types/company.types';
-// import type { Summary } from '../index.vue';
+import type { ComponentOptionsMixin, DefineComponent, Raw } from 'vue';
+const datas = ref<Company[]>([]);
 
-const datas = ref<Company[]>([
-]);
+type TSUMMARY = {
+		name: string;
+		value: number;
+		percentage: number;
+		icon: Raw<
+			DefineComponent<
+				{},
+				{},
+				{},
+				{},
+				{},
+				ComponentOptionsMixin,
+				ComponentOptionsMixin,
+				{},
+				any
+			>
+		>;
+	}
 
-const summaries = ref<any>([
+
+const summaries = ref<
+	TSUMMARY[]
+>([
 	{
-		name: 'Total Companies',
-		value: 5672,
+		name: 'total_companies',
+		value: 0,
 		percentage: 20,
 		icon: markRaw(buildingIcon),
-	},
-	{
-		name: 'Active Companies',
-		value: 4576,
-		percentage: 20,
-		icon: markRaw(carouselVerticalIcon),
-	},
-	{
-		name: 'Total Subscribers',
-		value: 3696,
-		percentage: 20,
-		icon: markRaw(chalkboardIcon),
-	},
-	{
-		name: 'Total Earning',
-		value: 8987858,
-		percentage: 40,
-		icon: markRaw(bussinesPlanIcon),
 	},
 ]);
 
@@ -65,7 +67,18 @@ const getCompanyData = async () => {
 	}));
 };
 
+const getCompanySummary = async () => {
+	const response = await $fetch('/api/companies/summary', {
+		headers: {
+			Authorization: `Bearer ${userStore.token}`,
+		},
+	});
+
+	summaries.value[0].value = response.data.all;
+};
+
 onMounted(async () => {
 	await getCompanyData();
+	await getCompanySummary();
 });
 </script>
