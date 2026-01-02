@@ -4,6 +4,7 @@
   "table_list": "Table List",
   "Name": "Name",
   "Email": "Email",
+  "email": "Email",
   "Status": "Status",
   "Roles": "Role",
   "Actions": "Actions",
@@ -53,5 +54,8 @@
   "enter_color": "Enter color",
   "enter_material": "Enter material",
   "enter_company_id": "Enter company ID",
-  "total_roles": "Total Roles"
+  "total_roles": "Total Roles",
+  "total_companies": "Total Companies",
+  "company_name": "Company Name",
+  "account_url": "Account URL"
 }

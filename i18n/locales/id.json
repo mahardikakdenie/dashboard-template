@@ -53,5 +53,8 @@
   "enter_color": "Masukkan warna",
   "enter_material": "Masukkan material",
   "enter_company_id": "Masukkan ID perusahaan",
-  "total_roles": "Jumlah Role"
+  "total_roles": "Jumlah Role",
+  "total_companies": "Total Perusahaan",
+  "company_name": "Nama Perusahaan",
+  "account_url": "URL Perusahaan"
 }
