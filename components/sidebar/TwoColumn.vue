@@ -285,9 +285,6 @@ const getDataProfile = async () => {
 };
 
 onMounted(() => {
-	// getDataProfile();
-	console.log("user : ", userStore.me);
-	
 	const matched = navItems.value.filter((nav) =>
 		nav.child.some(
 			(c) =>
