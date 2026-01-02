@@ -30,10 +30,10 @@ const props = withDefaults(
   }>(),
   {
     headers: () => [
-      { key: 'name', label: 'Company Name', type: 'text' },
-      { key: 'email', label: 'Email', type: 'text' },
-      { key: 'url', label: 'Account URL', type: 'text' },
-      { key: 'status', label: 'Status', type: 'status' },
+      { key: 'name', label: 'company_name', type: 'text' },
+      { key: 'email', label: 'email', type: 'text' },
+      { key: 'url', label: 'account_url', type: 'text' },
+      { key: 'status', label: 'status', type: 'status' },
       { key: 'actions', label: 'Actions', type: 'actions' },
     ],
     datas: () => [],
